@@ -37,5 +37,20 @@ if (isset($_POST['addPartNumber'])) {
     $addPartNumber = $_POST['addPartNumber'];
     $selectedPartNumber = json_decode($_POST['selectedPartNumber']);
 
-    print_r($selectedPartNumber);
+    echo addGoodsForSell($selectedPartNumber);
+}
+
+
+function addGoodsForSell($good)
+{
+    $sql = "INSERT INTO goods_for_sell (good_id, partNumber) VALUES (?, ?)";
+
+    $stmt = CONN->prepare($sql);
+    $stmt->bind_param('is',  $good['id'], $good['partNumber']); // Assuming good_id is empty or auto-incremented
+    // Execute the prepared statement
+    if ($stmt->execute()) {
+        return true; // Insertion successful
+    } else {
+        return false; // Insertion failed
+    }
 }
