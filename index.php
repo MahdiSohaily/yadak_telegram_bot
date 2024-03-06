@@ -229,7 +229,13 @@ require_once './layouts/header.php';
         axios.post("./app/api/partNumberApi.php", params)
             .then(function(response) {
                 const data = response.data;
-                console.log(data);
+                if (data) {
+                    message.innerHTML = "عملیلت موفقانه صورت گرفت";
+
+                    setTimeout(() => {
+                        toggleModalDisplay();
+                    }, 2000);
+                }
             })
             .catch(function(error) {
                 console.log(error);
