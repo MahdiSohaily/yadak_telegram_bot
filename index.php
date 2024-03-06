@@ -1,6 +1,7 @@
 <?php
 require_once './bootstrap/init.php';
 require_once './layouts/header.php';
+require_once './app/Controllers/TelegramController.php';
 ?>
 <style>
     .modal_container {
@@ -139,43 +140,30 @@ require_once './layouts/header.php';
         <table class="w-full mt-3">
             <thead>
                 <tr class="bg-gray-900">
-                    <th class="text-right py-2 px-3">1</th>
+                    <th class="text-right py-2 px-3">ردیف</th>
                     <th class="text-right py-2 px-3">کدفنی</th>
-                    <th class="text-right py-2 px-3">تعداد</th>
-                    <th class="text-right py-2 px-3">setting</th>
+                    <th class="text-right py-2 px-3">
+                        <img src="./public/img/setting.svg" alt="setting icon" />
+                    </th>
                 </tr>
             </thead>
             <tbody>
-                <tr class="even:bg-gray-200">
-                    <td class="py-2 px-3">1</td>
-                    <td class="py-2 px-3">name</td>
-                    <td class="py-2 px-3">username</td>
-                    <td class="py-2 px-3">setting</td>
-                </tr>
-                <tr class="even:bg-gray-200">
-                    <td class="py-2 px-3">1</td>
-                    <td class="py-2 px-3">name</td>
-                    <td class="py-2 px-3">profile</td>
-                    <td class="py-2 px-3">setting</td>
-                </tr>
-                <tr class="even:bg-gray-200">
-                    <td class="py-2 px-3">1</td>
-                    <td class="py-2 px-3">name</td>
-                    <td class="py-2 px-3">profile</td>
-                    <td class="py-2 px-3">setting</td>
-                </tr>
-                <tr class="even:bg-gray-200">
-                    <td class="py-2 px-3">1</td>
-                    <td class="py-2 px-3">name</td>
-                    <td class="py-2 px-3">profile</td>
-                    <td class="py-2 px-3">setting</td>
-                </tr>
-                <tr class="even:bg-gray-200">
-                    <td class="py-2 px-3">1</td>
-                    <td class="py-2 px-3">name</td>
-                    <td class="py-2 px-3">profile</td>
-                    <td class="py-2 px-3">setting</td>
-                </tr>
+                <?php
+                if ($selectedGoods !== null && count($selectedGoods) > 0) :
+                    foreach ($selectedGoods as $key => $item) : ?>
+                        <tr class="even:bg-gray-200">
+                            <td class="py-2 px-3"><?= $key + 1 ?></td>
+                            <td class="py-2 px-3"><?= $item['partNumber'] ?></td>
+                            <td class="py-2 px-3" onclick="deleteGood('<?= $item['id'] ?>')">
+                                <img src="./public/img/del.svg" alt="delete icon" class="cursor-pointer" />
+                            </td>
+                        </tr>
+                    <?php endforeach;
+                else : ?>
+                    <tr class="even:bg-gray-200">
+                        <td class="py-2 px-3 bg-rose-300 text-white text-center" colspan="3">موردی برای نمایش وجود ندارد</td>
+                    </tr>
+                <?php endif; ?>
             </tbody>
         </table>
     </section>
@@ -285,6 +273,26 @@ require_once './layouts/header.php';
         }
         search_container.innerHTML = '';
         message.innerHTML = partnumber;
+    }
+
+    function deleteGood(id) {
+        var params = new URLSearchParams();
+        params.append('deleteGood', 'deleteGood');
+        params.append('id', id);
+
+        axios.post("./app/api/partNumberApi.php", params)
+            .then(function(response) {
+                const data = response.data;
+                if (data == 'true') {
+                    window.location.reload();
+                } else {
+                    console.log(data);
+                }
+            })
+            .catch(function(error) {
+                console.log(error);
+            });
+
     }
 </script>
 <?php require_once './layouts/footer.php';

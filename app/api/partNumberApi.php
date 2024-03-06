@@ -71,3 +71,26 @@ function addGoodsForSell($good)
         return 'false'; // Insertion failed
     }
 }
+
+if (isset($_POST['deleteGood'])) {
+    $deleteGood = $_POST['deleteGood'];
+    $id = $_POST['id'];
+
+    // Set content type to JSON
+    header("Content-Type: application/json"); // Allow requests from any origin
+    echo json_encode(deleteGoodsForSell($id));
+}
+
+function deleteGoodsForSell($id)
+{
+    $sql = "DELETE FROM goods_for_sell WHERE id = ?";
+    $stmt = CONN->prepare($sql);
+    $stmt->bind_param('i', $id);
+
+    // Execute the prepared statement
+    if ($stmt->execute()) {
+        return 'true'; // Deletion successful
+    } else {
+        return 'false'; // Deletion failed
+    }
+}
