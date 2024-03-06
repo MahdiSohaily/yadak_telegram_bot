@@ -37,20 +37,37 @@ if (isset($_POST['addPartNumber'])) {
     $addPartNumber = $_POST['addPartNumber'];
     $selectedPartNumber = json_decode($_POST['selectedPartNumber']);
 
-    echo addGoodsForSell($selectedPartNumber);
+    // Set content type to JSON
+    header("Content-Type: application/json"); // Allow requests from any origin
+    echo json_encode(addGoodsForSell($selectedPartNumber));
 }
 
 
 function addGoodsForSell($good)
 {
-    $sql = "INSERT INTO goods_for_sell (good_id, partNumber) VALUES (?, ?)";
+    $count = 0;
+    // Check if good_id already exists
+    $check_sql = "SELECT COUNT(*) FROM goods_for_sell WHERE good_id = ?";
+    $check_stmt = CONN->prepare($check_sql);
+    $check_stmt->bind_param('i', $good->id);
+    $check_stmt->execute();
+    $check_stmt->bind_result($count);
+    $check_stmt->fetch();
+    $check_stmt->close();
 
+    if ($count > 0) {
+        return "exists";
+    }
+
+    // If good_id does not exist, proceed with insertion
+    $sql = "INSERT INTO goods_for_sell (good_id, partNumber) VALUES (?, ?)";
     $stmt = CONN->prepare($sql);
-    $stmt->bind_param('is',  $good['id'], $good['partNumber']); // Assuming good_id is empty or auto-incremented
+    $stmt->bind_param('is', $good->id, $good->partNumber);
+
     // Execute the prepared statement
     if ($stmt->execute()) {
-        return true; // Insertion successful
+        return 'true'; // Insertion successful
     } else {
-        return false; // Insertion failed
+        return 'false'; // Insertion failed
     }
 }

@@ -229,12 +229,16 @@ require_once './layouts/header.php';
         axios.post("./app/api/partNumberApi.php", params)
             .then(function(response) {
                 const data = response.data;
-                if (data) {
+                if (data == 'true') {
                     message.innerHTML = "عملیلت موفقانه صورت گرفت";
 
                     setTimeout(() => {
                         toggleModalDisplay();
                     }, 2000);
+                } else if (data == 'exists') {
+                    message.innerHTML = "این کد فنی قبلا انتخاب شده است";
+                } else {
+                    message.innerHTML = "مشکلی در انجام عملیات پیش آمده است";
                 }
             })
             .catch(function(error) {
