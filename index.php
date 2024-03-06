@@ -189,9 +189,8 @@ require_once './layouts/header.php';
             <img onclick="toggleModalDisplay()" class="cursor-pointer" src="./public/img/close.svg" alt="close icon">
         </div>
         <div class="py-5">
-            <form action="#">
-                <input type="text" name="partNumber" id="partNumber" placeholder="کد فنی محصول را وارد کنید" class="w-full p-2 border border-gray-300 rounded-md">
-            </form>
+            <input type="text" name="partNumber" id="partNumber" placeholder="کد فنی محصول را وارد کنید" class="w-full p-2 border border-gray-300 rounded-md">
+            <button onclick="addPartNumber()" class="bg-blue-500 text-white text-sm py-2 px-5 rounded-md mt-5">افزودن</button>
         </div>
     </div>
 </div>
@@ -200,6 +199,11 @@ require_once './layouts/header.php';
 
     function toggleModalDisplay() {
         modal_container.style.display = modal_container.style.display === 'none' ? 'flex' : 'none';
+    }
+
+    function addPartNumber() {
+        const partNumber = document.getElementById('partNumber').value;
+        console.log(partNumber);
     }
 </script>
 <?php require_once './layouts/footer.php';
