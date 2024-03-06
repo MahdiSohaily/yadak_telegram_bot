@@ -213,8 +213,6 @@ require_once './layouts/header.php';
         console.log(partNumber);
     }
 
-
-
     function getPartNumbers(pattern) {
         if (pattern.length >= 5) {
             var params = new URLSearchParams();
