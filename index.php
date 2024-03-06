@@ -183,7 +183,7 @@ require_once './layouts/header.php';
 
 <!-- MODAL TO ADD NEW PART NUMBER  -->
 <div id="modal_container" class="modal_container" style=" display: none;">
-    <div class="bg-white rounded-lg w-1/3 p-5 rtl border-b">
+    <div class="bg-white rounded-lg w-1/2 lg:w-1/3 p-5 rtl border-b">
         <div class="flex justify-between">
             <h2 class="font-bold text-xl">افزودن کد جدید</h2>
             <img onclick="toggleModalDisplay()" class="cursor-pointer" src="./public/img/close.svg" alt="close icon">
@@ -203,6 +203,9 @@ require_once './layouts/header.php';
     const modal_container = document.getElementById('modal_container');
     const partNumber = document.getElementById('partNumber');
     const search_container = document.getElementById('search_container');
+
+
+    let selectedPartNumber = null;
 
     function toggleModalDisplay() {
         modal_container.style.display = modal_container.style.display === 'none' ? 'flex' : 'none';
@@ -238,6 +241,17 @@ require_once './layouts/header.php';
                     console.log(error);
                 });
         }
+    }
+
+    function selectGood(id, partNumber) {
+        partNumber.value = partNumber;
+        selectedPartNumber = {
+            "id": id,
+            "partNumber": partNumber
+        }
+        search_container.innerHTML = '';
+
+        console.log(selectedPartNumber);
     }
 </script>
 <?php require_once './layouts/footer.php';
