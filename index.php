@@ -4,8 +4,8 @@ require_once './layouts/header.php';
 ?>
 <div class="rtl flex gap-5 h-screen">
     <section class="w-2/5 p-5 border border-dotted border-2 rounded-md">
-        <h2 class="text-2xl font-bold "> مخاطبین</h2>
-        <table class="w-full mt-5">
+        <h2 class="text-xl font-bold "> مخاطبین</h2>
+        <table class="w-full mt-3">
             <thead>
                 <tr class="bg-gray-900">
                     <th class="text-right py-2 px-3">1</th>
@@ -61,8 +61,8 @@ require_once './layouts/header.php';
         </table>
     </section>
     <section class="w-2/5 p-5 border border-dotted border-2 rounded-md">
-        <h2 class="text-2xl font-bold ">مخاطبین جدید</h2>
-        <table class="w-full mt-5">
+        <h2 class="text-xl font-bold ">مخاطبین جدید</h2>
+        <table class="w-full mt-3">
             <thead>
                 <tr class="bg-gray-900">
                     <th class="text-right py-2 px-3">1</th>
@@ -118,8 +118,8 @@ require_once './layouts/header.php';
         </table>
     </section>
     <section class="w-1/5 p-5 border border-dotted border-2 rounded-md">
-        <h2 class="text-2xl font-bold "> کد های انتخابی</h2>
-        <table class="w-full mt-5">
+        <h2 class="text-xl font-bold "> کد های انتخابی</h2>
+        <table class="w-full mt-3">
             <thead>
                 <tr class="bg-gray-900">
                     <th class="text-right py-2 px-3">1</th>
