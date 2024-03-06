@@ -280,8 +280,7 @@ require_once './app/Controllers/TelegramController.php';
         axios.post("./app/api/ContactsApi.php", params)
             .then(function(response) {
                 const data = response.data;
-                console.log(data);
-                if (data == 'true') {
+                if (data == true) {
                     window.location.reload();
                 }
             })
