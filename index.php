@@ -121,7 +121,10 @@ require_once './layouts/header.php';
         </table>
     </section>
     <section class="w-1/5 p-5 border border-dotted border-2 rounded-md">
-        <h2 class="text-xl font-bold "> کد های انتخابی</h2>
+        <div class="flex justify-between">
+            <h2 class="text-xl font-bold "> کد های انتخابی</h2>
+            <button class="bg-blue-500 text-sm text-white py-2 px-5 rounded-sm">افزودن کد</button>
+        </div>
         <table class="w-full mt-3">
             <thead>
                 <tr class="bg-gray-900">
