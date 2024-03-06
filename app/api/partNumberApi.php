@@ -26,7 +26,7 @@ if (isset($_POST['search'])) {
 
 function getMatchedPartNumbers($search)
 {
-    $sql = "SELECT * FROM part_numbers WHERE part_number LIKE '%$search%'";
+    $sql = "SELECT * FROM yadakshop1402.nisha WHERE partnumber LIKE '%$search%'";
     $result = CONN->query($sql);
     $partNumbers = mysqli_fetch_all($result, MYSQLI_ASSOC);
     return $partNumbers;

@@ -214,19 +214,21 @@ require_once './layouts/header.php';
     }
 
     function getPartNumbers(pattern) {
-        if (pattern.length >= 5) {
+        if (pattern.length > 6) {
             var params = new URLSearchParams();
-            params.append('search', search);
+            params.append('search', 'search');
             params.append('pattern', pattern);
 
-            axios.post("./app/Controllers/SearchController.php", params)
+            axios.post("./app/api/partNumberApi.php", params)
                 .then(function(response) {
                     const data = response.data;
                     let template = ``;
+                    search_container.innerHTML = template;
                     for (item of data) {
                         template += `
-                            <div class="p-2 border border-gray-300 rounded-md mt-2">
-                                <p>${item.part_number}</p>
+                            <div onclick="selectGood(${item.id}, '${item.partnumber}')" class="p-2 bg-gray-900 text-white mt-1 flex justify-between">
+                                <p>${item.partnumber}</p>
+                                <img src="./public/img/add.svg" alt="plus icon" class="cursor-pointer" />
                             </div>
                         `;
                     }
