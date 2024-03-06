@@ -29,46 +29,25 @@ require_once './app/Controllers/TelegramController.php';
                 </tr>
             </thead>
             <tbody>
-                <tr class="even:bg-gray-200">
-                    <td class="py-2 px-3">1</td>
-                    <td class="py-2 px-3">name</td>
-                    <td class="py-2 px-3">username</td>
-                    <td class="py-2 px-3">category</td>
-                    <td class="py-2 px-3">profile</td>
-                    <td class="py-2 px-3">setting</td>
-                </tr>
-                <tr class="even:bg-gray-200">
-                    <td class="py-2 px-3">1</td>
-                    <td class="py-2 px-3">name</td>
-                    <td class="py-2 px-3">username</td>
-                    <td class="py-2 px-3">category</td>
-                    <td class="py-2 px-3">profile</td>
-                    <td class="py-2 px-3">setting</td>
-                </tr>
-                <tr class="even:bg-gray-200">
-                    <td class="py-2 px-3">1</td>
-                    <td class="py-2 px-3">name</td>
-                    <td class="py-2 px-3">username</td>
-                    <td class="py-2 px-3">category</td>
-                    <td class="py-2 px-3">profile</td>
-                    <td class="py-2 px-3">setting</td>
-                </tr>
-                <tr class="even:bg-gray-200">
-                    <td class="py-2 px-3">1</td>
-                    <td class="py-2 px-3">name</td>
-                    <td class="py-2 px-3">username</td>
-                    <td class="py-2 px-3">category</td>
-                    <td class="py-2 px-3">profile</td>
-                    <td class="py-2 px-3">setting</td>
-                </tr>
-                <tr class="even:bg-gray-200">
-                    <td class="py-2 px-3">1</td>
-                    <td class="py-2 px-3">name</td>
-                    <td class="py-2 px-3">username</td>
-                    <td class="py-2 px-3">category</td>
-                    <td class="py-2 px-3">profile</td>
-                    <td class="py-2 px-3">setting</td>
-                </tr>
+                <?php
+                if ($contacts !== null && count($contacts) > 0) :
+                    foreach ($contacts as $key => $item) : ?>
+                        <tr class="even:bg-gray-200">
+                            <td class="py-2 px-3"><?= $key + 1 ?></td>
+                            <td class="py-2 px-3"><?= $item['name'] ?></td>
+                            <td class="py-2 px-3"><?= $item['username'] ?></td>
+                            <td class="py-2 px-3">category</td>
+                            <td class="py-2 px-3"><?= $item['profile'] ?></td>
+                            <td class="py-2 px-3" onclick="deleteContact('<?= $item['id'] ?>')">
+                                <img src="./public/img/del.svg" alt="delete icon">
+                            </td>
+                        </tr>
+                    <?php endforeach;
+                else : ?>
+                    <tr class="bg-rose-500 ">
+                        <td class="py-2 px-3 text-white text-center" colspan="6">موردی برای نمایش وجود ندارد.</td>
+                    </tr>
+                <?php endif; ?>
             </tbody>
         </table>
     </section>
