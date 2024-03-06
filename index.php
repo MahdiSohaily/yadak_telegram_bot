@@ -271,14 +271,16 @@ require_once './app/Controllers/TelegramController.php';
             });
 
     }
+
     function deleteContact(id) {
         var params = new URLSearchParams();
         params.append('deleteContact', 'deleteContact');
         params.append('id', id);
 
-        axios.post("./app/api/telegramApi.php", params)
+        axios.post("./app/api/ContactsApi.php", params)
             .then(function(response) {
                 const data = response.data;
+                console.log(data);
                 if (data == 'true') {
                     window.location.reload();
                 }
@@ -287,7 +289,7 @@ require_once './app/Controllers/TelegramController.php';
                 console.log(error);
             });
 
-    
+
     }
 </script>
 <?php require_once './layouts/footer.php';
