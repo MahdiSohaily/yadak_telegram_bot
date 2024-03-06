@@ -15,7 +15,6 @@
     <script src="./public/js/index.js?v=<?= rand() ?>"></script>
     <link rel="stylesheet" href="./public/css/index.css?v=<?= rand() ?>">
     <script src="./public/js/axios.js"></script>
-    <script src="./public/js/helpers.js?v=<?= rand() ?>"></script>
     <script src="./public/js/jalaliMoment.js?v=<?= rand() ?>"></script>
 </head>
 
