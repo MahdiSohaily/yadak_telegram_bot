@@ -3,7 +3,7 @@ function getPageDetails($page)
 {
     switch ($page) {
         case 'index.php':
-            return ['title' => "مدیریت فاکتور", 'icon' => './public/img/factor.svg'];
+            return ['title' => "مدیریت تلگرام", 'icon' => './public/img/factor.svg'];
             break;
         case 'incomplete.php':
             return ['title' => "ویرایش پیش فاکتور", 'icon' => './public/img/factor.svg'];
