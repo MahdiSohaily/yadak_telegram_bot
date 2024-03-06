@@ -264,14 +264,30 @@ require_once './app/Controllers/TelegramController.php';
                 const data = response.data;
                 if (data == 'true') {
                     window.location.reload();
-                } else {
-                    console.log(data);
                 }
             })
             .catch(function(error) {
                 console.log(error);
             });
 
+    }
+    function deleteContact(id) {
+        var params = new URLSearchParams();
+        params.append('deleteContact', 'deleteContact');
+        params.append('id', id);
+
+        axios.post("./app/api/telegramApi.php", params)
+            .then(function(response) {
+                const data = response.data;
+                if (data == 'true') {
+                    window.location.reload();
+                }
+            })
+            .catch(function(error) {
+                console.log(error);
+            });
+
+    
     }
 </script>
 <?php require_once './layouts/footer.php';
