@@ -13,8 +13,8 @@ require_once './layouts/header.php';
         align-items: center;
     }
 </style>
-<div class="rtl flex gap-5 h-screen">
-    <section class="w-2/5 p-5 border border-dotted border-2 rounded-md">
+<div class="rtl flex px-5 gap-5 h-screen grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+    <section class="p-5 border border-dotted border-2 rounded-md">
         <h2 class="text-xl font-bold "> مخاطبین</h2>
         <table class="w-full mt-3">
             <thead>
@@ -71,7 +71,7 @@ require_once './layouts/header.php';
             </tbody>
         </table>
     </section>
-    <section class="w-2/5 p-5 border border-dotted border-2 rounded-md">
+    <section class="p-5 border border-dotted border-2 rounded-md">
         <div class="flex justify-between">
             <h2 class="text-xl font-bold ">مخاطبین جدید</h2>
             <button class="bg-blue-500 text-sm text-white py-2 px-5 rounded-sm">افزودن همه</button>
@@ -131,7 +131,7 @@ require_once './layouts/header.php';
             </tbody>
         </table>
     </section>
-    <section class="w-1/5 p-5 border border-dotted border-2 rounded-md">
+    <section class="p-5 border border-dotted border-2 rounded-md">
         <div class="flex justify-between">
             <h2 class="text-xl font-bold "> کد های انتخابی</h2>
             <button onclick="toggleModalDisplay()" class="bg-blue-500 text-sm text-white py-2 px-5 rounded-sm">افزودن کد</button>
