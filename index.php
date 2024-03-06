@@ -205,15 +205,26 @@ require_once './layouts/header.php';
     const search_container = document.getElementById('search_container');
 
 
-    let selectedPartNumber = null;
+    let = null;
 
     function toggleModalDisplay() {
         modal_container.style.display = modal_container.style.display === 'none' ? 'flex' : 'none';
     }
 
     function addPartNumber() {
-        const partNumber = document.getElementById('partNumber').value;
-        console.log(partNumber);
+        var params = new URLSearchParams();
+        params.append('addPartNumber', 'addPartNumber');
+
+        params.append('selectedPartNumber', JSON.stringify(selectedPartNumber));
+
+        axios.post("./app/api/partNumberApi.php", params)
+            .then(function(response) {
+                const data = response.data;
+                console.log(data);
+            })
+            .catch(function(error) {
+                console.log(error);
+            });
     }
 
     function getPartNumbers(pattern) {
@@ -243,15 +254,13 @@ require_once './layouts/header.php';
         }
     }
 
-    function selectGood(id, partNumber) {
-        partNumber.value = partNumber;
+    function selectGood(id, partnumber) {
+        partNumber.value = partnumber;
         selectedPartNumber = {
             "id": id,
-            "partNumber": partNumber
+            "partNumber": partnumber
         }
         search_container.innerHTML = '';
-
-        console.log(selectedPartNumber);
     }
 </script>
 <?php require_once './layouts/footer.php';

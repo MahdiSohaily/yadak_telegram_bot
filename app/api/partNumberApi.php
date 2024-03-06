@@ -31,3 +31,11 @@ function getMatchedPartNumbers($search)
     $partNumbers = mysqli_fetch_all($result, MYSQLI_ASSOC);
     return $partNumbers;
 }
+
+
+if (isset($_POST['addPartNumber'])) {
+    $addPartNumber = $_POST['addPartNumber'];
+    $selectedPartNumber = json_decode($_POST['selectedPartNumber']);
+
+    print_r($selectedPartNumber);
+}
