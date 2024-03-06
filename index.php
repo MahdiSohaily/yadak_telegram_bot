@@ -195,7 +195,10 @@ require_once './layouts/header.php';
                     <!-- Matched  part numbers will be displayed here -->
                 </div>
             </div>
-            <button onclick="addPartNumber()" class="bg-blue-500 text-white text-sm py-2 px-5 rounded-md mt-5">افزودن</button>
+            <div class="flex justify-between items-center">
+                <button onclick="addPartNumber()" class="bg-blue-500 text-white text-sm py-2 px-5 rounded-md mt-5">افزودن</button>
+                <p id="message" class="text-green-600 text-sm font-bold"></p>
+            </div>
         </div>
     </div>
 </div>
@@ -203,15 +206,21 @@ require_once './layouts/header.php';
     const modal_container = document.getElementById('modal_container');
     const partNumber = document.getElementById('partNumber');
     const search_container = document.getElementById('search_container');
+    const message = document.getElementById('message');
 
 
-    let = null;
+    let selectedPartNumber = null;
 
     function toggleModalDisplay() {
         modal_container.style.display = modal_container.style.display === 'none' ? 'flex' : 'none';
     }
 
     function addPartNumber() {
+        if (selectedPartNumber === null) {
+            message.innerHTML = "شما کد فنی ای تا به حال انتخاب نکرده اید.";
+            return false;
+        }
+
         var params = new URLSearchParams();
         params.append('addPartNumber', 'addPartNumber');
 
@@ -251,6 +260,11 @@ require_once './layouts/header.php';
                 .catch(function(error) {
                     console.log(error);
                 });
+            selectedPartNumber = null;
+            message.innerHTML = "";
+        } else {
+            selectedPartNumber = null;
+            message.innerHTML = "";
         }
     }
 
@@ -261,6 +275,7 @@ require_once './layouts/header.php';
             "partNumber": partnumber
         }
         search_container.innerHTML = '';
+        message.innerHTML = partnumber;
     }
 </script>
 <?php require_once './layouts/footer.php';
