@@ -232,8 +232,8 @@ require_once './layouts/header.php';
                     message.innerHTML = "عملیلت موفقانه صورت گرفت";
 
                     setTimeout(() => {
-                        toggleModalDisplay();
-                    }, 2000);
+                        window.location.reload();
+                    }, 1000);
                 } else if (data == 'exists') {
                     message.innerHTML = "این کد فنی قبلا انتخاب شده است";
                 } else {
@@ -286,7 +286,5 @@ require_once './layouts/header.php';
         search_container.innerHTML = '';
         message.innerHTML = partnumber;
     }
-
-    
 </script>
 <?php require_once './layouts/footer.php';
