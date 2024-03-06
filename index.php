@@ -208,7 +208,6 @@ require_once './layouts/header.php';
     const search_container = document.getElementById('search_container');
     const message = document.getElementById('message');
 
-
     let selectedPartNumber = null;
 
     function toggleModalDisplay() {
@@ -287,5 +286,7 @@ require_once './layouts/header.php';
         search_container.innerHTML = '';
         message.innerHTML = partnumber;
     }
+
+    
 </script>
 <?php require_once './layouts/footer.php';
