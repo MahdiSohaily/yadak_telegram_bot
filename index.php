@@ -8,12 +8,12 @@ require_once './layouts/header.php';
         <table class="w-full mt-3">
             <thead>
                 <tr class="bg-gray-900">
-                    <th class="text-right py-2 px-3">1</th>
-                    <th class="text-right py-2 px-3">name</th>
-                    <th class="text-right py-2 px-3">username</th>
-                    <th class="text-right py-2 px-3">category</th>
-                    <th class="text-right py-2 px-3">profile</th>
-                    <th class="text-right py-2 px-3">setting</th>
+                    <th class="text-right py-2 px-3">ردیف</th>
+                    <th class="text-right py-2 px-3">اسم</th>
+                    <th class="text-right py-2 px-3">نام کاربری</th>
+                    <th class="text-right py-2 px-3">دسته بندی</th>
+                    <th class="text-right py-2 px-3">نمایه</th>
+                    <th class="text-right py-2 px-3">عملیات</th>
                 </tr>
             </thead>
             <tbody>
@@ -68,12 +68,12 @@ require_once './layouts/header.php';
         <table class="w-full mt-3">
             <thead>
                 <tr class="bg-gray-900">
-                    <th class="text-right py-2 px-3">1</th>
-                    <th class="text-right py-2 px-3">name</th>
-                    <th class="text-right py-2 px-3">username</th>
-                    <th class="text-right py-2 px-3">category</th>
-                    <th class="text-right py-2 px-3">profile</th>
-                    <th class="text-right py-2 px-3">setting</th>
+                    <th class="text-right py-2 px-3">ردیف</th>
+                    <th class="text-right py-2 px-3">اسم</th>
+                    <th class="text-right py-2 px-3">نام کاربری</th>
+                    <th class="text-right py-2 px-3">دسته بندی</th>
+                    <th class="text-right py-2 px-3">نمایه</th>
+                    <th class="text-right py-2 px-3">عملیات</th>
                 </tr>
             </thead>
             <tbody>
@@ -127,7 +127,7 @@ require_once './layouts/header.php';
                 <tr class="bg-gray-900">
                     <th class="text-right py-2 px-3">1</th>
                     <th class="text-right py-2 px-3">کدفنی</th>
-                    <th class="text-right py-2 px-3">تعداد موجود</th>
+                    <th class="text-right py-2 px-3">تعداد</th>
                     <th class="text-right py-2 px-3">setting</th>
                 </tr>
             </thead>
