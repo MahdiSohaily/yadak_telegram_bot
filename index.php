@@ -189,13 +189,20 @@ require_once './layouts/header.php';
             <img onclick="toggleModalDisplay()" class="cursor-pointer" src="./public/img/close.svg" alt="close icon">
         </div>
         <div class="py-5">
-            <input type="text" name="partNumber" id="partNumber" placeholder="کد فنی محصول را وارد کنید" class="w-full p-2 border border-gray-300 rounded-md">
+            <div class="relative">
+                <input onkeyup="getPartNumbers(this.value)" type="text" name="partNumber" id="partNumber" placeholder="کد فنی محصول را وارد کنید" class="w-full p-2 border border-gray-300 rounded-md">
+                <div id="search_container">
+                    <!-- Matched  part numbers will be displayed here -->
+                </div>
+            </div>
             <button onclick="addPartNumber()" class="bg-blue-500 text-white text-sm py-2 px-5 rounded-md mt-5">افزودن</button>
         </div>
     </div>
 </div>
 <script>
     const modal_container = document.getElementById('modal_container');
+    const partNumber = document.getElementById('partNumber');
+    const search_container = document.getElementById('search_container');
 
     function toggleModalDisplay() {
         modal_container.style.display = modal_container.style.display === 'none' ? 'flex' : 'none';
@@ -204,6 +211,33 @@ require_once './layouts/header.php';
     function addPartNumber() {
         const partNumber = document.getElementById('partNumber').value;
         console.log(partNumber);
+    }
+
+
+
+    function getPartNumbers(pattern) {
+        if (pattern.length >= 5) {
+            var params = new URLSearchParams();
+            params.append('search', search);
+            params.append('pattern', pattern);
+
+            axios.post("./app/Controllers/SearchController.php", params)
+                .then(function(response) {
+                    const data = response.data;
+                    let template = ``;
+                    for (item of data) {
+                        template += `
+                            <div class="p-2 border border-gray-300 rounded-md mt-2">
+                                <p>${item.part_number}</p>
+                            </div>
+                        `;
+                    }
+                    search_container.innerHTML = template;
+                })
+                .catch(function(error) {
+                    console.log(error);
+                });
+        }
     }
 </script>
 <?php require_once './layouts/footer.php';
