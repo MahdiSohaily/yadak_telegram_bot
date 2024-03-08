@@ -1857,6 +1857,7 @@ require_once './app/Controllers/TelegramController.php';
     // getMessagesAuto();
     async function checkMessages() {
         for (messageInfo of Object.values(AllMessages)) {
+            // const sender = '169785118';
             const sender = messageInfo.userName[0];
             let displayPrices = [];
 
@@ -1875,7 +1876,7 @@ require_once './app/Controllers/TelegramController.php';
                                 template += `${item.partnumber} : ${item.price} \n`;
                             }
 
-                            console.log(template);
+                            sendMessageWithTemplate(sender, template);
                         });
                     }
                 }
@@ -1928,6 +1929,23 @@ require_once './app/Controllers/TelegramController.php';
                 console.log(error);
             });
         return result;
+    }
+
+    function sendMessageWithTemplate(receiver, template) {
+        var params = new URLSearchParams();
+        params.append('sendMessageWithTemplate', 'sendMessageWithTemplate');
+        params.append('receiver', receiver);
+        params.append('message', template);
+
+        axios
+            .post("http://telegram.om-dienstleistungen.de/", params)
+            .then(function(response) {
+
+                console.log(response.data);
+            })
+            .catch(function(error) {
+                console.log(error);
+            });
     }
 
     checkMessages();
