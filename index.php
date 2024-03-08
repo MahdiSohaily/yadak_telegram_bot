@@ -496,14 +496,13 @@ require_once './app/Controllers/TelegramController.php';
         axios.post("./app/api/ContactsApi.php", params)
             .then(function(response) {
                 const data = response.data;
-                console.log(data);
-                // if (data == 'exist') {
-                //     alert('مخاطب از قبل در سیستم موجود است.');
-                // } else if (data == true) {
-                //     window.location.reload();
-                // } else {
-                //     alert('مشکلی  در هنگام اضافه کردن مخاطب رخ داده است.');
-                // }
+                if (data == 'exist') {
+                    alert('مخاطب از قبل در سیستم موجود است.');
+                } else if (data == true) {
+                    window.location.reload();
+                } else {
+                    alert('مشکلی  در هنگام اضافه کردن مخاطب رخ داده است.');
+                }
             })
             .catch(function(error) {
                 console.log(error);
@@ -553,7 +552,6 @@ require_once './app/Controllers/TelegramController.php';
             .then(function(response) {
                 const contacts = response.data;
                 if (contacts.length > 0) {
-                    console.log(NewContacts);
                     let template = ``;
                     let counter = 1;
                     for (contact of contacts) {
