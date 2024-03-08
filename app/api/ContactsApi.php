@@ -23,8 +23,10 @@ if (isset($_POST['addContact'])) {
 }
 function addContact($name, $username, $chat_id, $profile)
 {
-    $sql = "SELECT COUNT(chat_id) FROM telegram.receiver WHERE chat_id = '$chat_id'";
+    $sql = "SELECT COUNT(chat_id) AS total FROM telegram.receiver WHERE chat_id = '$chat_id'";
     $result = CONN->query($sql);
+    $result = $result->fetch_assoc()['total'];
+
     if (!$result) {
         $addSql = "INSERT INTO telegram.receiver (cat_id, chat_id, name, username, profile) VALUES 
                     ('1', '$chat_id', '$name', '$username', '$profile')";
