@@ -555,7 +555,7 @@ require_once './app/Controllers/TelegramController.php';
                     let template = ``;
                     let counter = 1;
                     for (contact of contacts) {
-                        if (!existingContacts.includes(contact.id + "")) {
+                        if (!existingContacts.includes(contact.id + "") && contact.type == "user") {
                             NewContacts.push(contact);
                             template += `
                         <tr class="even:bg-gray-200">
