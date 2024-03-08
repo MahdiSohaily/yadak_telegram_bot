@@ -277,13 +277,21 @@ require_once './app/Controllers/TelegramController.php';
     function connect() {
         var params = new URLSearchParams();
         params.append('getContacts', 'getContacts');
+        const container = document.getElementById('newContacts');
+        container.innerHTML = `
+                        <tr class="even:bg-gray-200">
+                            <td class="py-5 px-3 text-sm text-center" colspan="6">
+                                <img class="w-12 h-12 mx-auto" src="./public/img/loading.png" />
+                                <br />
+                                <p class="text-sm">لطفا صبور باشید</p>
+                            </td>
+                        </tr>`;
 
         axios
             .post("http://telegram.om-dienstleistungen.de/", params)
             .then(function(response) {
                 const contacts = response.data;
                 if (contacts.length > 0) {
-                    const container = document.getElementById('newContacts');
                     let template = ``;
                     let counter = 1;
                     for (contact of contacts) {
