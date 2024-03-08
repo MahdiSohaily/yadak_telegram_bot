@@ -30,7 +30,7 @@ if (isset($_POST['addAllContact'])) {
     //     addContact($)
     // }
 
-    print_r($contacts)
+    print_r($contacts);
 }
 
 function addContact($name, $username, $chat_id, $profile)
