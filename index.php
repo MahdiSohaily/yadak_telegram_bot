@@ -20,12 +20,11 @@ require_once './app/Controllers/TelegramController.php';
         <table class="w-full mt-3">
             <thead>
                 <tr class="bg-gray-900">
-                    <th class="text-right py-2 px-3">ردیف</th>
-                    <th class="text-right py-2 px-3">اسم</th>
-                    <th class="text-right py-2 px-3">نام کاربری</th>
-                    <th class="text-right py-2 px-3">دسته بندی</th>
-                    <th class="text-right py-2 px-3">نمایه</th>
-                    <th class="text-right py-2 px-3">عملیات</th>
+                    <th class="text-right py-2 px-3 text-sm">ردیف</th>
+                    <th class="text-right py-2 px-3 text-sm">اسم</th>
+                    <th class="text-right py-2 px-3 text-sm">نام کاربری</th>
+                    <th class="text-right py-2 px-3 text-sm">دسته بندی</th>
+                    <th class="text-right py-2 px-3 text-sm">عملیات</th>
                 </tr>
             </thead>
             <tbody>
@@ -37,7 +36,6 @@ require_once './app/Controllers/TelegramController.php';
                             <td class="py-2 px-3"><?= $item['name'] ?></td>
                             <td class="py-2 px-3"><?= $item['username'] ?></td>
                             <td class="py-2 px-3">category</td>
-                            <td class="py-2 px-3"><?= $item['profile'] ?></td>
                             <td class="py-2 px-3 cursor-pointer" onclick="deleteContact('<?= $item['id'] ?>')">
                                 <img src="./public/img/del.svg" alt="delete icon">
                             </td>
@@ -45,7 +43,7 @@ require_once './app/Controllers/TelegramController.php';
                     <?php endforeach;
                 else : ?>
                     <tr class="bg-rose-400 ">
-                        <td class="py-2 px-3 text-white text-center" colspan="6">موردی برای نمایش وجود ندارد.</td>
+                        <td class="py-2 px-3 text-white text-center" colspan="5">موردی برای نمایش وجود ندارد.</td>
                     </tr>
                 <?php endif; ?>
             </tbody>
@@ -63,7 +61,6 @@ require_once './app/Controllers/TelegramController.php';
                     <th class="text-right py-2 px-3 text-sm">اسم</th>
                     <th class="text-right py-2 px-3 text-sm">نام کاربری</th>
                     <th class="text-right py-2 px-3 text-sm">دسته بندی</th>
-                    <th class="text-right py-2 px-3 text-sm">نمایه</th>
                     <th class="text-right py-2 px-3 text-sm">عملیات</th>
                 </tr>
             </thead>
@@ -500,13 +497,13 @@ require_once './app/Controllers/TelegramController.php';
             .then(function(response) {
                 const data = response.data;
                 console.log(data);
-                if (data == 'exist') {
-                    alert('مخاطب از قبل در سیستم موجود است.');
-                } else if (data == true) {
-                    window.location.reload();
-                } else {
-                    alert('مشکلی  در هنگام اضافه کردن مخاطب رخ داده است.');
-                }
+                // if (data == 'exist') {
+                //     alert('مخاطب از قبل در سیستم موجود است.');
+                // } else if (data == true) {
+                //     window.location.reload();
+                // } else {
+                //     alert('مشکلی  در هنگام اضافه کردن مخاطب رخ داده است.');
+                // }
             })
             .catch(function(error) {
                 console.log(error);
@@ -517,7 +514,7 @@ require_once './app/Controllers/TelegramController.php';
     function addAllContacts() {
         var params = new URLSearchParams();
         params.append('addAllContact', 'addAllContact');
-        params.append('contacts', NewContacts);
+        params.append('contacts', JSON.stringify(NewContacts));
 
         if (NewContacts.length > 0) {
             axios.post("./app/api/ContactsApi.php", params)
@@ -544,7 +541,7 @@ require_once './app/Controllers/TelegramController.php';
         const container = document.getElementById('newContacts');
         container.innerHTML = `
                         <tr class="even:bg-gray-200">
-                            <td class="py-5 px-3 text-sm text-center" colspan="6">
+                            <td class="py-5 px-3 text-sm text-center" colspan="5">
                                 <img class="w-12 h-12 mx-auto" src="./public/img/loading.png" />
                                 <br />
                                 <p class="text-sm">لطفا صبور باشید</p>
@@ -568,7 +565,6 @@ require_once './app/Controllers/TelegramController.php';
                             <td class="py-2 px-3 text-sm">${contact.first_name ?? ''}</td>
                             <td class="py-2 px-3 text-sm">${contact.username ?? ''}</td>
                             <td class="py-2 px-3 text-sm">category</td>
-                            <td class="py-2 px-3 text-sm">profile</td>
                             <td class="py-2 px-3 text-sm cursor-pointer" 
                                 onclick="addContact(
                                     '${contact.first_name ?? ''}',
@@ -589,7 +585,6 @@ require_once './app/Controllers/TelegramController.php';
                 console.log(error);
             });
     }
-    // connect();
-    console.log(NewContacts);
+    connect();
 </script>
 <?php require_once './layouts/footer.php';

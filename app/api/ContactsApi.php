@@ -24,13 +24,13 @@ if (isset($_POST['addContact'])) {
 
 if (isset($_POST['addAllContact'])) {
 
-    $contacts = $_POST['contacts'];
+    $contacts = json_decode($_POST['contacts']);
 
-    // foreach ($contacts as $contact) {
-    //     addContact($)
-    // }
+    foreach ($contacts as $contact) {
+        addAllContacts($contact);
+    }
 
-    print_r($contacts);
+    echo true;
 }
 
 function addContact($name, $username, $chat_id, $profile)
@@ -50,5 +50,28 @@ function addContact($name, $username, $chat_id, $profile)
         }
     } else {
         echo 'exist';
+    }
+}
+
+function addAllContacts($contact)
+{
+    $chat_id = $contact->id;
+    $name = $contact->first_name;
+    $username = $contact->username ?? '';
+    $profile = '$contact->profile';
+
+    $sql = "SELECT COUNT(chat_id) AS total FROM telegram.receiver WHERE chat_id = '$chat_id'";
+    $result = CONN->query($sql);
+    $result = $result->fetch_assoc()['total'];
+
+    if (!$result) {
+        $addSql = "INSERT INTO telegram.receiver (cat_id, chat_id, name, username, profile) VALUES 
+                    ('1', '$chat_id', '$name', '$username', '$profile')";
+        $status = CONN->query($addSql);
+        if ($status) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
