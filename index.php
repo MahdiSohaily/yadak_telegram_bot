@@ -376,8 +376,6 @@ require_once './app/Controllers/TelegramController.php';
     ];
     let selectedPartNumber = null;
 
-    console.log(existingContacts);
-
     function toggleModalDisplay() {
         modal_container.style.display = modal_container.style.display === 'none' ? 'flex' : 'none';
     }
