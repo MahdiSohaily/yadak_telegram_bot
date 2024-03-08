@@ -15,6 +15,11 @@ if (isset($_POST['deleteContact'])) {
 }
 
 if (isset($_POST['addContact'])) {
+    $name = $_POST['name'];
+    $username = $_POST['username'];
+    $profile = $_POST['profile'];
+    $chat_id = $_POST['chat_id'];
+    addContact($name, $username, $chat_id, $profile);
 }
 function addContact($name, $username, $chat_id, $profile)
 {
