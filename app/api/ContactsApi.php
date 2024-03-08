@@ -21,6 +21,18 @@ if (isset($_POST['addContact'])) {
     $chat_id = $_POST['chat_id'];
     addContact($name, $username, $chat_id, $profile);
 }
+
+if (isset($_POST['addAllContact'])) {
+
+    $contacts = $_POST['contacts'];
+
+    // foreach ($contacts as $contact) {
+    //     addContact($)
+    // }
+
+    print_r($contacts)
+}
+
 function addContact($name, $username, $chat_id, $profile)
 {
     $sql = "SELECT COUNT(chat_id) AS total FROM telegram.receiver WHERE chat_id = '$chat_id'";
