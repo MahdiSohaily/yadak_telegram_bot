@@ -14,8 +14,8 @@ require_once './app/Controllers/TelegramController.php';
         align-items: center;
     }
 </style>
-<div class="rtl flex px-5 gap-5 h-screen grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
-    <section class="p-5 border border-dotted border-2 rounded-md">
+<div class="rtl flex px-5 gap-5 h-screen grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-5">
+    <section class="p-5 border col-span-2 border-dotted border-2 rounded-md">
         <h2 class="text-xl font-bold "> مخاطبین</h2>
         <table class="w-full mt-3">
             <thead>
@@ -51,7 +51,7 @@ require_once './app/Controllers/TelegramController.php';
             </tbody>
         </table>
     </section>
-    <section class="p-5 border border-dotted border-2 rounded-md">
+    <section class="p-5 border col-span-2 border-dotted border-2 rounded-md">
         <div class="flex justify-between">
             <h2 class="text-xl font-bold ">مخاطبین جدید</h2>
             <button onclick="addAllContacts()" class="bg-blue-500 text-sm text-white py-2 px-5 rounded-sm">افزودن همه</button>
@@ -59,45 +59,15 @@ require_once './app/Controllers/TelegramController.php';
         <table class="w-full mt-3">
             <thead>
                 <tr class="bg-gray-900">
-                    <th class="text-right py-2 px-3">ردیف</th>
-                    <th class="text-right py-2 px-3">اسم</th>
-                    <th class="text-right py-2 px-3">نام کاربری</th>
-                    <th class="text-right py-2 px-3">دسته بندی</th>
-                    <th class="text-right py-2 px-3">نمایه</th>
-                    <th class="text-right py-2 px-3">عملیات</th>
+                    <th class="text-right py-2 px-3 text-sm">ردیف</th>
+                    <th class="text-right py-2 px-3 text-sm">اسم</th>
+                    <th class="text-right py-2 px-3 text-sm">نام کاربری</th>
+                    <th class="text-right py-2 px-3 text-sm">دسته بندی</th>
+                    <th class="text-right py-2 px-3 text-sm">نمایه</th>
+                    <th class="text-right py-2 px-3 text-sm">عملیات</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr class="even:bg-gray-200">
-                    <td class="py-2 px-3">1</td>
-                    <td class="py-2 px-3">name</td>
-                    <td class="py-2 px-3">username</td>
-                    <td class="py-2 px-3">category</td>
-                    <td class="py-2 px-3">profile</td>
-                    <td class="py-2 px-3 cursor-pointer" onclick="addContact('mahdi', 'sohaily', '3048451', 'rezaei.jpeg')">
-                        <img src="./public/img/del.svg" alt="delete icon">
-                    </td>
-                </tr>
-                <tr class="even:bg-gray-200">
-                    <td class="py-2 px-3">1</td>
-                    <td class="py-2 px-3">name</td>
-                    <td class="py-2 px-3">username</td>
-                    <td class="py-2 px-3">category</td>
-                    <td class="py-2 px-3">profile</td>
-                    <td class="py-2 px-3 cursor-pointer" onclick="addContact('mahdi', 'sohaily', '3048452', 'rezaei.jpeg')">
-                        <img src="./public/img/del.svg" alt="delete icon">
-                    </td>
-                </tr>
-                <tr class="even:bg-gray-200">
-                    <td class="py-2 px-3">1</td>
-                    <td class="py-2 px-3">name</td>
-                    <td class="py-2 px-3">username</td>
-                    <td class="py-2 px-3">category</td>
-                    <td class="py-2 px-3">profile</td>
-                    <td class="py-2 px-3 cursor-pointer" onclick="addContact('mahdi', 'sohaily', '3048453', 'rezaei.jpeg')">
-                        <img src="./public/img/del.svg" alt="delete icon">
-                    </td>
-                </tr>
+            <tbody id="newContacts">
             </tbody>
         </table>
     </section>
@@ -311,8 +281,33 @@ require_once './app/Controllers/TelegramController.php';
         axios
             .post("http://telegram.om-dienstleistungen.de/", params)
             .then(function(response) {
-                const data = response.data;
-                console.log(data);
+                const contacts = response.data;
+                if (contacts.length > 0) {
+                    const container = document.getElementById('newContacts');
+                    let template = ``;
+                    let counter = 1;
+                    for (contact of contacts) {
+                        template += `
+                        <tr class="even:bg-gray-200">
+                            <td class="py-2 px-3 text-sm">${counter}</td>
+                            <td class="py-2 px-3 text-sm">${contact.first_name ?? ''}</td>
+                            <td class="py-2 px-3 text-sm">${contact.username ?? ''}</td>
+                            <td class="py-2 px-3 text-sm">category</td>
+                            <td class="py-2 px-3 text-sm">profile</td>
+                            <td class="py-2 px-3 text-sm cursor-pointer" 
+                                onclick="addContact(
+                                    '${contact.first_name ?? ''}',
+                                    '${contact.username ?? ''}',
+                                    '${contact.id ?? ''}',
+                                    'rezaei.jpeg'
+                                )">
+                                <img src="./public/img/del.svg" alt="delete icon">
+                            </td>
+                        </tr>`;
+                        counter++;
+                    }
+                    container.innerHTML = template;
+                }
             })
             .catch(function(error) {
                 console.log(error);
