@@ -38,7 +38,7 @@ require_once './app/Controllers/TelegramController.php';
                             <td class="py-2 px-3"><?= $item['username'] ?></td>
                             <td class="py-2 px-3">category</td>
                             <td class="py-2 px-3"><?= $item['profile'] ?></td>
-                            <td class="py-2 px-3" onclick="deleteContact('<?= $item['id'] ?>')">
+                            <td class="py-2 px-3 cursor-pointer" onclick="deleteContact('<?= $item['id'] ?>')">
                                 <img src="./public/img/del.svg" alt="delete icon">
                             </td>
                         </tr>
@@ -54,7 +54,7 @@ require_once './app/Controllers/TelegramController.php';
     <section class="p-5 border border-dotted border-2 rounded-md">
         <div class="flex justify-between">
             <h2 class="text-xl font-bold ">مخاطبین جدید</h2>
-            <button class="bg-blue-500 text-sm text-white py-2 px-5 rounded-sm">افزودن همه</button>
+            <button onclick="addAllContacts()" class="bg-blue-500 text-sm text-white py-2 px-5 rounded-sm">افزودن همه</button>
         </div>
         <table class="w-full mt-3">
             <thead>
@@ -74,7 +74,27 @@ require_once './app/Controllers/TelegramController.php';
                     <td class="py-2 px-3">username</td>
                     <td class="py-2 px-3">category</td>
                     <td class="py-2 px-3">profile</td>
-                    <td class="py-2 px-3" onclick="addContact('mahdi', 'sohaily', '304845', 'rezaei.jpeg')">
+                    <td class="py-2 px-3 cursor-pointer" onclick="addContact('mahdi', 'sohaily', '3048451', 'rezaei.jpeg')">
+                        <img src="./public/img/del.svg" alt="delete icon">
+                    </td>
+                </tr>
+                <tr class="even:bg-gray-200">
+                    <td class="py-2 px-3">1</td>
+                    <td class="py-2 px-3">name</td>
+                    <td class="py-2 px-3">username</td>
+                    <td class="py-2 px-3">category</td>
+                    <td class="py-2 px-3">profile</td>
+                    <td class="py-2 px-3 cursor-pointer" onclick="addContact('mahdi', 'sohaily', '3048452', 'rezaei.jpeg')">
+                        <img src="./public/img/del.svg" alt="delete icon">
+                    </td>
+                </tr>
+                <tr class="even:bg-gray-200">
+                    <td class="py-2 px-3">1</td>
+                    <td class="py-2 px-3">name</td>
+                    <td class="py-2 px-3">username</td>
+                    <td class="py-2 px-3">category</td>
+                    <td class="py-2 px-3">profile</td>
+                    <td class="py-2 px-3 cursor-pointer" onclick="addContact('mahdi', 'sohaily', '3048453', 'rezaei.jpeg')">
                         <img src="./public/img/del.svg" alt="delete icon">
                     </td>
                 </tr>
@@ -270,10 +290,13 @@ require_once './app/Controllers/TelegramController.php';
         axios.post("./app/api/ContactsApi.php", params)
             .then(function(response) {
                 const data = response.data;
-                console.log(data);
-                // if (data == true) {
-                //     window.location.reload();
-                // }
+                if (data == 'exist') {
+                    alert('مخاطب از قبل در سیستم موجود است.');
+                } else if (data == true) {
+                    window.location.reload();
+                } else {
+                    alert('مشکلی  در هنگام اضافه کردن مخاطب رخ داده است.');
+                }
             })
             .catch(function(error) {
                 console.log(error);
