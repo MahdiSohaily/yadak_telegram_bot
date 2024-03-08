@@ -13,3 +13,23 @@ if (isset($_POST['deleteContact'])) {
         echo 'false';
     }
 }
+
+if (isset($_POST['addContact'])) {
+}
+function addContact($name, $username, $chat_id, $profile)
+{
+    $sql = "SELECT COUNT(chat_id) FROM telegram.receiver WHERE chat_id = '$chat_id'";
+    $result = CONN->query($sql);
+    if (!$result) {
+        $addSql = "INSERT INTO telegram.receiver (cat_id, chat_id, name, username, profile) VALUES 
+                    ('1', '$chat_id', '$name', '$username', '$profile')";
+        $status = CONN->query($addSql);
+        if ($status) {
+            echo 'true';
+        } else {
+            echo 'false';
+        }
+    } else {
+        echo 'exist';
+    }
+}
