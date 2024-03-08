@@ -44,7 +44,7 @@ require_once './app/Controllers/TelegramController.php';
                         </tr>
                     <?php endforeach;
                 else : ?>
-                    <tr class="bg-rose-500 ">
+                    <tr class="bg-rose-400 ">
                         <td class="py-2 px-3 text-white text-center" colspan="6">موردی برای نمایش وجود ندارد.</td>
                     </tr>
                 <?php endif; ?>
@@ -74,39 +74,9 @@ require_once './app/Controllers/TelegramController.php';
                     <td class="py-2 px-3">username</td>
                     <td class="py-2 px-3">category</td>
                     <td class="py-2 px-3">profile</td>
-                    <td class="py-2 px-3">setting</td>
-                </tr>
-                <tr class="even:bg-gray-200">
-                    <td class="py-2 px-3">1</td>
-                    <td class="py-2 px-3">name</td>
-                    <td class="py-2 px-3">username</td>
-                    <td class="py-2 px-3">category</td>
-                    <td class="py-2 px-3">profile</td>
-                    <td class="py-2 px-3">setting</td>
-                </tr>
-                <tr class="even:bg-gray-200">
-                    <td class="py-2 px-3">1</td>
-                    <td class="py-2 px-3">name</td>
-                    <td class="py-2 px-3">username</td>
-                    <td class="py-2 px-3">category</td>
-                    <td class="py-2 px-3">profile</td>
-                    <td class="py-2 px-3">setting</td>
-                </tr>
-                <tr class="even:bg-gray-200">
-                    <td class="py-2 px-3">1</td>
-                    <td class="py-2 px-3">name</td>
-                    <td class="py-2 px-3">username</td>
-                    <td class="py-2 px-3">category</td>
-                    <td class="py-2 px-3">profile</td>
-                    <td class="py-2 px-3">setting</td>
-                </tr>
-                <tr class="even:bg-gray-200">
-                    <td class="py-2 px-3">1</td>
-                    <td class="py-2 px-3">name</td>
-                    <td class="py-2 px-3">username</td>
-                    <td class="py-2 px-3">category</td>
-                    <td class="py-2 px-3">profile</td>
-                    <td class="py-2 px-3">setting</td>
+                    <td class="py-2 px-3" onclick="addContact('mahdi', 'sohaily', '304845', 'rezaei.jpeg')">
+                        <img src="./public/img/del.svg" alt="delete icon">
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -139,8 +109,8 @@ require_once './app/Controllers/TelegramController.php';
                         </tr>
                     <?php endforeach;
                 else : ?>
-                    <tr class="even:bg-gray-200">
-                        <td class="py-2 px-3 bg-rose-300 text-white text-center" colspan="3">موردی برای نمایش وجود ندارد</td>
+                    <tr>
+                        <td class="py-2 px-3 bg-rose-400 text-white text-center" colspan="3">موردی برای نمایش وجود ندارد</td>
                     </tr>
                 <?php endif; ?>
             </tbody>
@@ -287,7 +257,26 @@ require_once './app/Controllers/TelegramController.php';
             .catch(function(error) {
                 console.log(error);
             });
+    }
 
+    function addContact(name, username, chat_id, profile) {
+        var params = new URLSearchParams();
+        params.append('addContact', 'addContact');
+        params.append('name', name);
+        params.append('username', username);
+        params.append('chat_id', chat_id);
+        params.append('profile', profile);
+
+        axios.post("./app/api/ContactsApi.php", params)
+            .then(function(response) {
+                const data = response.data;
+                if (data == true) {
+                    window.location.reload();
+                }
+            })
+            .catch(function(error) {
+                console.log(error);
+            });
 
     }
 </script>
