@@ -303,5 +303,21 @@ require_once './app/Controllers/TelegramController.php';
             });
 
     }
+
+    function connect() {
+        var params = new URLSearchParams();
+        params.append('getContacts', 'getContacts');
+
+        axios
+            .post("http://telegram.om-dienstleistungen.de/", params)
+            .then(function(response) {
+                const data = response.data;
+                console.log(data);
+            })
+            .catch(function(error) {
+                console.log(error);
+            });
+    }
+    connect();
 </script>
 <?php require_once './layouts/footer.php';
