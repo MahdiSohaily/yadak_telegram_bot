@@ -401,15 +401,30 @@ require_once './app/Controllers/TelegramController.php';
                                 template += `${messageInfo.name[0]}: ${item.partnumber} : ${item.price} \n`;
                             }
 
-                            console.log(template);
-                            // sendMessageWithTemplate(sender, template);
+                            saveConversation(sender, codes.join(' '), template);
+                            sendMessageWithTemplate(sender, template);
                         });
-                    } else {
-                        console.log(`${messageInfo.name[0]}: Not Found \n`);
                     }
                 }
             }
         }
+    }
+
+    function saveConversation(receiver, request = '', response = '') {
+        var params = new URLSearchParams();
+        params.append('saveConversation', 'saveConversation');
+        params.append('receiver', receiver);
+        params.append('request', request);
+        params.append('response', response);
+
+        axios
+            .post("./app/api/ContactsApi.php", params)
+            .then(function(response) {
+
+            })
+            .catch(function(error) {
+                console.log(error);
+            });
     }
 
     async function getPrice(codes) {

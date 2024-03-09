@@ -122,3 +122,33 @@ function getPartialsSelectedGoods($page)
     }
     return json_encode($goods);
 }
+
+
+if (isset($_POST['saveConversation'])) {
+    $receiver = $_POST['receiver'];
+    $request = $_POST['request'];
+    $response = $_POST['response'];
+
+    header('Content-Type: application/json');
+    echo saveConversation($receiver, $request, $response);
+}
+
+
+function saveConversation($receiver, $request, $response) {
+    // Prepare the SQL statement
+    $sql = "INSERT INTO telegram.messages (receiver, request, response) VALUES (?, ?, ?)";
+    
+    // Prepare the statement
+    $statement = CONN->prepare($sql);
+    
+    // Bind parameters and execute the statement
+    $statement->bind_param("iss", $receiver, $request, $response);
+    $statement->execute();
+    
+    // Check if the insertion was successful
+    if ($statement->affected_rows > 0) {
+        return true; // Conversation saved successfully
+    } else {
+        return false; // Failed to save conversation
+    }
+}
