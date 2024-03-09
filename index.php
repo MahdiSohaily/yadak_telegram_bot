@@ -36,15 +36,15 @@ require_once './app/Controllers/TelegramController.php';
                     <td class="py-2 px-3" colspan="4">
                         <div class="flex flex-wrap justify-center items-center">
                             <?php
-                            $pages = (count($contacts) / 50);
-                            for ($page = 1; $page <= $pages; $page++) {
-                                echo "<span class='flex justify-center items-center w-8 p-2 m-1 text-sm cursor-pointer bg-gray-900 text-white' onclick='getPartialContacts($page)'>$page</span>";
-                            }
+                            $pages = ceil(count($contacts) / 50);
+                            if ($pages > 1)
+                                for ($page = 1; $page <= $pages; $page++) {
+                                    echo "<span class='flex justify-center items-center w-8 p-2 m-1 text-sm cursor-pointer bg-gray-900 text-white' onclick='getPartialContacts($page)'>$page</span>";
+                                }
                             ?>
                         </div>
                     </td>
                 </tr>
-
             </tfoot>
         </table>
     </section>
@@ -90,11 +90,20 @@ require_once './app/Controllers/TelegramController.php';
                 <!-- Partial selected Goods will be placed here -->
             </tbody>
             <tfoot>
-                <tr>
-                    <td colspan="3">
-
+                <tr class="py-2">
+                    <td class="py-2 px-3" colspan="4">
+                        <div class="flex flex-wrap justify-center items-center">
+                            <?php
+                            $pages = ceil(count($selectedGoods) / 50);
+                            if ($pages > 1)
+                                for ($page = 1; $page <= $pages; $page++) {
+                                    echo "<span class='flex justify-center items-center w-8 p-2 m-1 text-sm cursor-pointer bg-gray-900 text-white' onclick='getPartialContacts($page)'>$page</span>";
+                                }
+                            ?>
+                        </div>
                     </td>
                 </tr>
+
             </tfoot>
         </table>
     </section>
