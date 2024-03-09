@@ -16,7 +16,12 @@ require_once './app/Controllers/TelegramController.php';
 </style>
 <div class="rtl flex px-5 gap-5 h-screen grid grid-cols-1 gap-6 lg:grid-cols-5">
     <section class="p-5 border col-span-2 border-dotted border-2 rounded-md">
-        <h2 class="text-xl font-bold "> مخاطبین</h2>
+        <div class="flex justify-between">
+            <h2 class="text-xl font-bold ">مخاطبین</h2>
+            <div>
+                <a href="./messages.php" class="bg-blue-500 text-sm text-white py-2 px-5 rounded-sm">پیام های ارسالی</a>
+            </div>
+        </div>
         <table class="w-full mt-3">
             <thead>
                 <tr class="bg-gray-900">
