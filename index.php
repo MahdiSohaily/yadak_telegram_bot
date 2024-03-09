@@ -14,7 +14,7 @@ require_once './app/Controllers/TelegramController.php';
         align-items: center;
     }
 </style>
-<div class="rtl flex px-5 gap-5 h-screen grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-5">
+<div class="rtl flex px-5 gap-5 h-screen grid grid-cols-1 gap-6 lg:grid-cols-5">
     <section class="p-5 border col-span-2 border-dotted border-2 rounded-md">
         <h2 class="text-xl font-bold "> مخاطبین</h2>
         <table class="w-full mt-3">
