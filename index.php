@@ -136,7 +136,7 @@ require_once './app/Controllers/TelegramController.php';
     const search_container = document.getElementById('search_container');
     const message = document.getElementById('message');
 
-    let NewContacts = null;
+    let NewContacts = [];
     let selectedPartNumber = null;
 
     function toggleModalDisplay() {
@@ -469,5 +469,6 @@ require_once './app/Controllers/TelegramController.php';
                 console.log(error);
             });
     }
+    connect();
 </script>
 <?php require_once './layouts/footer.php';
