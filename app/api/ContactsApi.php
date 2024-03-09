@@ -5,12 +5,17 @@ require_once '../Middlewares/AuthMiddleware.php';
 
 if (isset($_POST['deleteContact'])) {
     $id = $_POST['id'];
+    echo deleteContact($id);
+}
+
+function deleteContact($id)
+{
     $sql = "DELETE FROM telegram.receiver WHERE id = $id";
     $result = CONN->query($sql);
     if ($result) {
-        echo 'true';
+        return true;
     } else {
-        echo 'false';
+        return false;
     }
 }
 
@@ -20,17 +25,6 @@ if (isset($_POST['addContact'])) {
     $profile = $_POST['profile'];
     $chat_id = $_POST['chat_id'];
     addContact($name, $username, $chat_id, $profile);
-}
-
-if (isset($_POST['addAllContact'])) {
-
-    $contacts = json_decode($_POST['contacts']);
-
-    foreach ($contacts as $contact) {
-        addAllContacts($contact);
-    }
-
-    echo true;
 }
 
 function addContact($name, $username, $chat_id, $profile)
@@ -51,6 +45,17 @@ function addContact($name, $username, $chat_id, $profile)
     } else {
         echo 'exist';
     }
+}
+
+if (isset($_POST['addAllContact'])) {
+
+    $contacts = json_decode($_POST['contacts']);
+
+    foreach ($contacts as $contact) {
+        addAllContacts($contact);
+    }
+
+    echo true;
 }
 
 function addAllContacts($contact)
@@ -74,4 +79,24 @@ function addAllContacts($contact)
             return false;
         }
     }
+}
+
+if (isset($_POST['getPartialContacts'])) {
+    $page = $_POST['page'];
+
+    header('Content-Type: application/json');
+    echo getPartialContacts($page);
+}
+
+function getPartialContacts($page)
+{
+    $sql = "SELECT * FROM telegram.receiver LIMIT 50 OFFSET $page";
+    $result = CONN->query($sql);
+    $contacts = [];
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $contacts[] = $row;
+        }
+    }
+    return json_encode($contacts);
 }

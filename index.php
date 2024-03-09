@@ -28,31 +28,18 @@ require_once './app/Controllers/TelegramController.php';
                     </th>
                 </tr>
             </thead>
-            <tbody>
-                <?php
-                if ($contacts !== null && count($contacts) > 0) :
-                    foreach ($contacts as $key => $item) : ?>
-                        <tr class="even:bg-gray-200">
-                            <td class="py-2 px-3 text-sm"><?= $key + 1 ?></td>
-                            <td class="py-2 px-3 text-sm"><?= $item['name'] ?></td>
-                            <td class="py-2 px-3 text-sm"><?= $item['username'] ?></td>
-                            <td class="py-2 px-3 text-sm cursor-pointer" onclick="deleteContact('<?= $item['id'] ?>')">
-                                <img src="./public/img/del.svg" alt="delete icon">
-                            </td>
-                        </tr>
-                    <?php endforeach;
-                else : ?>
-                    <tr class="bg-rose-400 ">
-                        <td class="py-2 px-3 text-white text-center" colspan="4">موردی برای نمایش وجود ندارد.</td>
-                    </tr>
-                <?php endif; ?>
+            <tbody id="existingContacts">
+                <!-- Partial contacts will be appended here -->
             </tbody>
         </table>
     </section>
     <section class="p-5 border col-span-2 border-dotted border-2 rounded-md">
         <div class="flex justify-between">
             <h2 class="text-xl font-bold ">مخاطبین جدید</h2>
-            <button onclick="addAllContacts()" class="bg-blue-500 text-sm text-white py-2 px-5 rounded-sm">افزودن همه</button>
+            <div>
+                <button onclick="connect()" class="bg-blue-500 text-sm text-white py-2 px-5 rounded-sm">بارگیری</button>
+                <button onclick="addAllContacts()" class="bg-blue-500 text-sm text-white py-2 px-5 rounded-sm">افزودن همه</button>
+            </div>
         </div>
         <table class="w-full mt-3">
             <thead>
@@ -471,6 +458,45 @@ require_once './app/Controllers/TelegramController.php';
                 console.log(error);
             });
     }
+
+    function getPartialContacts(page = 1) {
+        const existingContacts = document.getElementById('existingContacts');
+        var params = new URLSearchParams();
+        params.append('getPartialContacts', 'getPartialContacts');
+        params.append('page', page);
+
+        axios
+            .post("http://telegram.om-dienstleistungen.de/", params)
+            .then(function(response) {
+                const contacts = response.data;
+                if (contacts.length > 0) {
+                    let template = ``;
+                    for (contact of contacts) {
+                        template += `
+                        <tr class="even:bg-gray-200">
+                            <td class="py-2 px-3 text-sm">${contact.id}</td>
+                            <td class="py-2 px-3 text-sm">${contact.first_name}</td>
+                            <td class="py-2 px-3 text-sm">${contact.username}</td>
+                            <td class="py-2 px-3 text-sm cursor-pointer" 
+                                onclick="addContact(
+                                    '${contact.first_name}',
+                                    '${contact.username}',
+                                    '${contact.id}',
+                                    'rezaei.jpeg'
+                                )">
+                                <img src="./public/img/add.svg" alt="plus icon">
+                            </td>
+                        </tr>`;
+                    }
+                    existingContacts.innerHTML = template;
+                }
+            })
+            .catch(function(error) {
+                console.log(error);
+            });
+    }
+
+    getPartialContacts();
 
     // getMessagesAuto();
     // connect();
