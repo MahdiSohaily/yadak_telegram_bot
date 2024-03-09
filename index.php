@@ -387,24 +387,25 @@ require_once './app/Controllers/TelegramController.php';
 
                 for (item of messageContent) {
                     let codes = item.code.split('\n');
+
+
                     codes = codes.filter(function(line) {
-                        return line != "";
-                    })
-                    // codes = codes.filter(function(line) {
-                    //     return line != "" && definedCodes.includes(line);
-                    // })
+                        return line != "" && definedCodes.includes(line);
+                    });
 
 
                     if (codes.length) {
                         await getPrice(codes).then(data => {
 
                             for (item of data) {
-                                template += `${messageInfo.first_name}: ${item.partnumber} : ${item.price} \n`;
+                                template += `${messageInfo.name[0]}: ${item.partnumber} : ${item.price} \n`;
                             }
 
                             console.log(template);
                             // sendMessageWithTemplate(sender, template);
                         });
+                    } else {
+                        console.log(`${messageInfo.name[0]}: Not Found \n`);
                     }
                 }
             }
@@ -556,7 +557,6 @@ require_once './app/Controllers/TelegramController.php';
     getPartialContacts();
     getPartialsSelectedGoods();
 
-    // getMessagesAuto();
-    // connect();
+    getMessagesAuto();
 </script>
 <?php require_once './layouts/footer.php';
