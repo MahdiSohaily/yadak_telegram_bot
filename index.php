@@ -138,6 +138,7 @@ require_once './app/Controllers/TelegramController.php';
 
     let NewContacts = [];
     let selectedPartNumber = null;
+    let AllMessages = null;
 
     function toggleModalDisplay() {
         modal_container.style.display = modal_container.style.display === 'none' ? 'flex' : 'none';
@@ -356,8 +357,6 @@ require_once './app/Controllers/TelegramController.php';
             });
     }
 
-    let AllMessages = null;
-
     function getMessagesAuto() {
         var params = new URLSearchParams();
         params.append('getMessagesAuto', 'getMessagesAuto');
@@ -367,7 +366,6 @@ require_once './app/Controllers/TelegramController.php';
                 const messages = JSON.stringify(response.data);
 
                 AllMessages = JSON.parse(messages);
-                console.log(AllMessages);
                 checkMessages()
             })
             .catch(function(error) {
@@ -375,7 +373,6 @@ require_once './app/Controllers/TelegramController.php';
             });
     }
 
-    getMessagesAuto();
     async function checkMessages() {
         for (messageInfo of Object.values(AllMessages)) {
             // const sender = '169785118';
@@ -389,10 +386,16 @@ require_once './app/Controllers/TelegramController.php';
                 for (item of messageContent) {
                     let codes = item.code.split('\n');
                     codes = codes.filter(function(line) {
-                        return line != "" && definedCodes.includes(line);
+                        return line != "";
                     })
+                    // codes = codes.filter(function(line) {
+                    //     return line != "" && definedCodes.includes(line);
+                    // })
+
+
                     if (codes.length) {
                         await getPrice(codes).then(data => {
+
                             for (item of data) {
                                 template += `${messageInfo.first_name}: ${item.partnumber} : ${item.price} \n`;
                             }
@@ -405,7 +408,6 @@ require_once './app/Controllers/TelegramController.php';
             }
         }
     }
-
 
     async function getPrice(codes) {
         var params = new URLSearchParams();
@@ -469,6 +471,8 @@ require_once './app/Controllers/TelegramController.php';
                 console.log(error);
             });
     }
-    connect();
+
+    // getMessagesAuto();
+    // connect();
 </script>
 <?php require_once './layouts/footer.php';
