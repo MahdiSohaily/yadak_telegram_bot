@@ -1,5 +1,4 @@
 <?php
-
 $contacts = getContacts();
 $selectedGoods = getSelectedGoods();
 $newContacts = null;
