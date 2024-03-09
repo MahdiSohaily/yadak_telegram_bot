@@ -86,24 +86,16 @@ require_once './app/Controllers/TelegramController.php';
                     </th>
                 </tr>
             </thead>
-            <tbody>
-                <?php
-                if ($selectedGoods !== null && count($selectedGoods) > 0) :
-                    foreach ($selectedGoods as $key => $item) : ?>
-                        <tr class="even:bg-gray-200">
-                            <td class="py-2 px-3 text-sm"><?= $key + 1 ?></td>
-                            <td class="py-2 px-3 text-sm"><?= $item['partNumber'] ?></td>
-                            <td class="py-2 px-3 text-sm" onclick="deleteGood('<?= $item['id'] ?>')">
-                                <img src="./public/img/del.svg" alt="delete icon" class="cursor-pointer" />
-                            </td>
-                        </tr>
-                    <?php endforeach;
-                else : ?>
-                    <tr>
-                        <td class="py-2 px-3 bg-rose-400 text-white text-center" colspan="3">موردی برای نمایش وجود ندارد</td>
-                    </tr>
-                <?php endif; ?>
+            <tbody id="partialSelectedGoods">
+                <!-- Partial selected Goods will be placed here -->
             </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3">
+
+                    </td>
+                </tr>
+            </tfoot>
         </table>
     </section>
 </div>
@@ -478,6 +470,46 @@ require_once './app/Controllers/TelegramController.php';
         const existingContacts = document.getElementById('existingContacts');
         var params = new URLSearchParams();
         params.append('getPartialContacts', 'getPartialContacts');
+        params.append('page', page);
+
+        axios
+            .post("./app/api/ContactsApi.php", params)
+            .then(function(response) {
+                const contacts = response.data;
+                if (contacts.length > 0) {
+                    let template = ``;
+                    let counter = null;
+
+                    if (page == 1) {
+                        counter = 1;
+                    } else {
+                        counter = (Number(page) - 1) * 50 + 1;
+                    }
+                    for (contact of contacts) {
+                        template += `
+                        <tr class="even:bg-gray-200">
+                            <td class="py-2 px-3 text-sm">${counter}</td>
+                            <td class="py-2 px-3 text-sm">${contact.name}</td>
+                            <td class="py-2 px-3 text-sm">${contact.username}</td>
+                            <td class="py-2 px-3 text-sm cursor-pointer" 
+                                onclick="deleteContact('${contact.id}')">
+                                <img src="./public/img/del.svg" alt="plus icon">
+                            </td>
+                        </tr>`;
+                        counter++;
+                    }
+                    existingContacts.innerHTML = template;
+                }
+            })
+            .catch(function(error) {
+                console.log(error);
+            });
+    }
+
+    getPartialsSelectedGoods($page = 1) {
+        const partialSelectedGoods = document.getElementById('partialSelectedGoods');
+        var params = new URLSearchParams();
+        params.append('getPartialsSelectedGoods', 'getPartialsSelectedGoods');
         params.append('page', page);
 
         axios

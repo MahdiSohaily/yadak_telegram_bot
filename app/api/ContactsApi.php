@@ -101,3 +101,24 @@ function getPartialContacts($page)
     }
     return json_encode($contacts);
 }
+
+if (isset($_POST['getPartialsSelectedGoods'])) {
+    $page = $_POST['page'];
+
+    header('Content-Type: application/json');
+    echo getPartialsSelectedGoods($page);
+}
+
+function getPartialsSelectedGoods($page)
+{
+    $offset = $page * 50;
+    $sql = "SELECT * FROM telegram.goods_for_sell LIMIT 50 OFFSET $offset";
+    $result = CONN->query($sql);
+    $goods = [];
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $goods[] = $row;
+        }
+    }
+    return json_encode($goods);
+}
