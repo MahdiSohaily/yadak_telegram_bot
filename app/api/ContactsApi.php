@@ -90,7 +90,8 @@ if (isset($_POST['getPartialContacts'])) {
 
 function getPartialContacts($page)
 {
-    $sql = "SELECT * FROM telegram.receiver LIMIT 50 OFFSET $page";
+    $offset = $page * 50;
+    $sql = "SELECT * FROM telegram.receiver LIMIT 50 OFFSET $offset";
     $result = CONN->query($sql);
     $contacts = [];
     if ($result->num_rows > 0) {

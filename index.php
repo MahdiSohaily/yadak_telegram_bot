@@ -31,6 +31,21 @@ require_once './app/Controllers/TelegramController.php';
             <tbody id="existingContacts">
                 <!-- Partial contacts will be appended here -->
             </tbody>
+            <tfoot>
+                <tr class="py-2">
+                    <td class="py-2 px-3" colspan="4">
+                        <div class="flex flex-wrap justify-center items-center">
+                            <?php
+                            $pages = (count($contacts) / 50);
+                            for ($page = 1; $page <= $pages; $page++) {
+                                echo "<span class='flex justify-center items-center w-8 p-2 m-1 text-sm cursor-pointer bg-gray-900 text-white' onclick='getPartialContacts($page)'>$page</span>";
+                            }
+                            ?>
+                        </div>
+                    </td>
+                </tr>
+
+            </tfoot>
         </table>
     </section>
     <section class="p-5 border col-span-2 border-dotted border-2 rounded-md">
@@ -471,7 +486,13 @@ require_once './app/Controllers/TelegramController.php';
                 const contacts = response.data;
                 if (contacts.length > 0) {
                     let template = ``;
-                    let counter = 1;
+                    let counter = null;
+
+                    if (page == 1) {
+                        counter = 1;
+                    } else {
+                        counter = (Number(page) - 1) * 50 + 1;
+                    }
                     for (contact of contacts) {
                         template += `
                         <tr class="even:bg-gray-200">
