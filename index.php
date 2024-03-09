@@ -466,27 +466,24 @@ require_once './app/Controllers/TelegramController.php';
         params.append('page', page);
 
         axios
-            .post("http://telegram.om-dienstleistungen.de/", params)
+            .post("./app/api/ContactsApi.php", params)
             .then(function(response) {
                 const contacts = response.data;
                 if (contacts.length > 0) {
                     let template = ``;
+                    let counter = 1;
                     for (contact of contacts) {
                         template += `
                         <tr class="even:bg-gray-200">
-                            <td class="py-2 px-3 text-sm">${contact.id}</td>
-                            <td class="py-2 px-3 text-sm">${contact.first_name}</td>
+                            <td class="py-2 px-3 text-sm">${counter}</td>
+                            <td class="py-2 px-3 text-sm">${contact.name}</td>
                             <td class="py-2 px-3 text-sm">${contact.username}</td>
                             <td class="py-2 px-3 text-sm cursor-pointer" 
-                                onclick="addContact(
-                                    '${contact.first_name}',
-                                    '${contact.username}',
-                                    '${contact.id}',
-                                    'rezaei.jpeg'
-                                )">
-                                <img src="./public/img/add.svg" alt="plus icon">
+                                onclick="deleteContact('${contact.id}')">
+                                <img src="./public/img/del.svg" alt="plus icon">
                             </td>
                         </tr>`;
+                        counter++;
                     }
                     existingContacts.innerHTML = template;
                 }
