@@ -506,8 +506,9 @@ require_once './app/Controllers/TelegramController.php';
             });
     }
 
-    getPartialsSelectedGoods($page = 1) {
+    function getPartialsSelectedGoods(page = 1) {
         const partialSelectedGoods = document.getElementById('partialSelectedGoods');
+
         var params = new URLSearchParams();
         params.append('getPartialsSelectedGoods', 'getPartialsSelectedGoods');
         params.append('page', page);
@@ -515,8 +516,10 @@ require_once './app/Controllers/TelegramController.php';
         axios
             .post("./app/api/ContactsApi.php", params)
             .then(function(response) {
-                const contacts = response.data;
-                if (contacts.length > 0) {
+                const goods = response.data;
+
+                console.log(goods);
+                if (goods.length > 0) {
                     let template = ``;
                     let counter = null;
 
@@ -525,20 +528,19 @@ require_once './app/Controllers/TelegramController.php';
                     } else {
                         counter = (Number(page) - 1) * 50 + 1;
                     }
-                    for (contact of contacts) {
+                    for (good of goods) {
                         template += `
                         <tr class="even:bg-gray-200">
                             <td class="py-2 px-3 text-sm">${counter}</td>
-                            <td class="py-2 px-3 text-sm">${contact.name}</td>
-                            <td class="py-2 px-3 text-sm">${contact.username}</td>
+                            <td class="py-2 px-3 text-sm">${good.partNumber}</td>
                             <td class="py-2 px-3 text-sm cursor-pointer" 
-                                onclick="deleteContact('${contact.id}')">
+                                onclick="deleteGood('${good.id}')">
                                 <img src="./public/img/del.svg" alt="plus icon">
                             </td>
                         </tr>`;
                         counter++;
                     }
-                    existingContacts.innerHTML = template;
+                    partialSelectedGoods.innerHTML = template;
                 }
             })
             .catch(function(error) {
@@ -547,6 +549,7 @@ require_once './app/Controllers/TelegramController.php';
     }
 
     getPartialContacts();
+    getPartialsSelectedGoods();
 
     // getMessagesAuto();
     // connect();

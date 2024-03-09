@@ -90,7 +90,7 @@ if (isset($_POST['getPartialContacts'])) {
 
 function getPartialContacts($page)
 {
-    $offset = $page * 50;
+    $offset = ($page - 1) * 50;
     $sql = "SELECT * FROM telegram.receiver LIMIT 50 OFFSET $offset";
     $result = CONN->query($sql);
     $contacts = [];
@@ -111,7 +111,7 @@ if (isset($_POST['getPartialsSelectedGoods'])) {
 
 function getPartialsSelectedGoods($page)
 {
-    $offset = $page * 50;
+    $offset = ($page - 1) * 50;
     $sql = "SELECT * FROM telegram.goods_for_sell LIMIT 50 OFFSET $offset";
     $result = CONN->query($sql);
     $goods = [];
