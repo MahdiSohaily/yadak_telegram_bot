@@ -327,7 +327,7 @@ require_once './app/Controllers/TelegramController.php';
                         if (!existingContacts.includes(contact.id + "") && contact.type == "user") {
                             NewContacts.push(contact);
                             template += `
-                        <tr class="even:bg-gray-200">
+                        <tr class="even:bg-gray-200 odd:bg-white">
                             <td class="py-2 px-3 text-sm">${counter}</td>
                             <td class="py-2 px-3 text-sm">${contact.first_name ?? ''}</td>
                             <td class="py-2 px-3 text-sm">${contact.username ?? ''}</td>
@@ -494,7 +494,7 @@ require_once './app/Controllers/TelegramController.php';
                     }
                     for (contact of contacts) {
                         template += `
-                        <tr class="even:bg-gray-200">
+                        <tr class="even:bg-gray-200 odd:bg-white">
                             <td class="py-2 px-3 text-sm">${counter}</td>
                             <td class="py-2 px-3 text-sm">${contact.name}</td>
                             <td class="py-2 px-3 text-sm">${contact.username}</td>
@@ -535,7 +535,7 @@ require_once './app/Controllers/TelegramController.php';
                     }
                     for (good of goods) {
                         template += `
-                        <tr class="even:bg-gray-200">
+                        <tr class="even:bg-gray-200 odd:bg-white">
                             <td class="py-2 px-3 text-sm">${counter}</td>
                             <td class="py-2 px-3 text-sm">${good.partNumber}</td>
                             <td class="py-2 px-3 text-sm cursor-pointer" 
