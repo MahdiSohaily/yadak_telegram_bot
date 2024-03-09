@@ -280,7 +280,6 @@ require_once './app/Controllers/TelegramController.php';
             axios.post("./app/api/ContactsApi.php", params)
                 .then(function(response) {
                     const data = response.data;
-                    console.log(data);
                     if (data == 'exist') {
                         alert('مخاطب از قبل در سیستم موجود است.');
                     } else if (data == true) {
@@ -459,7 +458,6 @@ require_once './app/Controllers/TelegramController.php';
             .post("http://telegram.om-dienstleistungen.de/", params)
             .then(function(response) {
 
-                console.log(response.data);
             })
             .catch(function(error) {
                 console.log(error);
@@ -517,8 +515,6 @@ require_once './app/Controllers/TelegramController.php';
             .post("./app/api/ContactsApi.php", params)
             .then(function(response) {
                 const goods = response.data;
-
-                console.log(goods);
                 if (goods.length > 0) {
                     let template = ``;
                     let counter = null;
