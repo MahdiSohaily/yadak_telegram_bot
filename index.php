@@ -331,14 +331,18 @@ require_once './app/Controllers/TelegramController.php';
                     for (contact of contacts) {
                         if (!existingContacts.includes(contact.id + "") && contact.type == "user") {
                             NewContacts.push(contact);
+                            const firstName = contact.first_name ?? '';
+                            const lastName = contact.last_name ?? '';
+
+                            const clientName = firstName + " " + lastName;
                             template += `
                         <tr class="even:bg-gray-200 odd:bg-white">
                             <td class="py-2 px-3 text-sm">${counter}</td>
-                            <td class="py-2 px-3 text-sm">${contact.first_name ?? ''}</td>
+                            <td class="py-2 px-3 text-sm">${clientName ?? ''}</td>
                             <td class="py-2 px-3 text-sm">${contact.username ?? ''}</td>
                             <td class="py-2 px-3 text-sm cursor-pointer" 
                                 onclick="addContact(
-                                    '${contact.first_name ?? ''}',
+                                    '${clientName ?? ''}',
                                     '${contact.username ?? ''}',
                                     '${contact.id ?? ''}',
                                     'rezaei.jpeg'
@@ -581,6 +585,6 @@ require_once './app/Controllers/TelegramController.php';
     getPartialContacts();
     getPartialsSelectedGoods();
 
-    setInterval(getMessagesAuto, 150000);
+    // setInterval(getMessagesAuto, 150000);
 </script>
 <?php require_once './layouts/footer.php';
