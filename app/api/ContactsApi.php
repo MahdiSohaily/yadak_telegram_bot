@@ -158,23 +158,35 @@ function saveConversation($receiver, $request, $response)
 }
 
 
-if (isset($_POST['isGoodSelected'])) {
-    $partnumber = $_POST['partnumber'];
+if (isset($_POST['checkGood'])) {
 
-    header('Content-Type: application/json');
-    echo isGoodSelected($partnumber);
+} else {
+    echo 'false';
 }
+    
 
 
-function isGoodSelected($partnumber)
+function checkGoodPartNumber($partnumber)
 {
-    $sql = "SELECT COUNT(partNumber) AS total FROM telegram.goods_for_sell WHERE partNumber LIKE %'$partnumber'%";
-    $result = CONN->query($sql);
-    $result = $result->fetch_assoc()['total'];
+    // Use prepared statements to prevent SQL injection
+    $sql = "SELECT COUNT(partNumber) AS total FROM telegram.goods_for_sell WHERE partNumber LIKE ?";
+    $stmt = CONN->prepare($sql);
+    
+    // Bind parameter and execute statement
+    $partnumberParam = '%' . $partnumber . '%';
+    $stmt->bind_param("s", $partnumberParam);
+    $stmt->execute();
 
-    if ($result) {
+    // Get result
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+    $total = $row['total'];
+
+    // Check if partnumber exists
+    if ($total > 0) {
         return true;
     } else {
         return false;
     }
 }
+
