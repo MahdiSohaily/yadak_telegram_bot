@@ -420,8 +420,6 @@ require_once './app/Controllers/TelegramController.php';
                     // Wait for all promises to resolve
                     const filteredCodes = await Promise.all(promises);
 
-                    console.log(filteredCodes);
-
                     // Remove null or undefined elements from the array
                     codes = filteredCodes.filter(code => code);
 
@@ -447,8 +445,6 @@ require_once './app/Controllers/TelegramController.php';
     }
 
     async function isGoodSelected(partnumber) {
-        // Add logging to see which partnumbers are being processed
-        console.log('Processing partnumber:', partnumber);
 
         var params = new URLSearchParams();
         params.append('checkGood', 'checkGood');
