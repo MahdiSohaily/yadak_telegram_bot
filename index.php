@@ -365,19 +365,23 @@ require_once './app/Controllers/TelegramController.php';
     }
 
     function getMessagesAuto() {
-        var params = new URLSearchParams();
-        params.append('getMessagesAuto', 'getMessagesAuto');
-        axios
-            .post("http://telegram.om-dienstleistungen.de/", params)
-            .then(function(response) {
-                const messages = JSON.stringify(response.data);
+        try {
+            var params = new URLSearchParams();
+            params.append('getMessagesAuto', 'getMessagesAuto');
+            axios
+                .post("http://telegram.om-dienstleistungen.de/", params)
+                .then(function(response) {
+                    const messages = JSON.stringify(response.data);
 
-                AllMessages = JSON.parse(messages);
-                checkMessages()
-            })
-            .catch(function(error) {
-                console.log(error);
-            });
+                    AllMessages = JSON.parse(messages);
+                    checkMessages()
+                })
+                .catch(function(error) {
+                    console.log(error);
+                });
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     async function checkMessages() {
