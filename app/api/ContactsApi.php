@@ -61,7 +61,10 @@ if (isset($_POST['addAllContact'])) {
 function addAllContacts($contact)
 {
     $chat_id = $contact->id;
-    $name = $contact->first_name;
+    $name = $contact->first_name ?? '';
+    $lastName = $contact->last_name ?? '';
+
+    $clientName = trim($name . ' ' . $lastName);
     $username = $contact->username ?? '';
     $profile = '$contact->profile';
 
@@ -71,7 +74,7 @@ function addAllContacts($contact)
 
     if (!$result) {
         $addSql = "INSERT INTO telegram.receiver (cat_id, chat_id, name, username, profile) VALUES 
-                    ('1', '$chat_id', '$name', '$username', '$profile')";
+                    ('1', '$chat_id', '$clientName', '$username', '$profile')";
         $status = CONN->query($addSql);
         if ($status) {
             return true;
@@ -134,17 +137,18 @@ if (isset($_POST['saveConversation'])) {
 }
 
 
-function saveConversation($receiver, $request, $response) {
+function saveConversation($receiver, $request, $response)
+{
     // Prepare the SQL statement
     $sql = "INSERT INTO telegram.messages (receiver, request, response) VALUES (?, ?, ?)";
-    
+
     // Prepare the statement
     $statement = CONN->prepare($sql);
-    
+
     // Bind parameters and execute the statement
     $statement->bind_param("iss", $receiver, $request, $response);
     $statement->execute();
-    
+
     // Check if the insertion was successful
     if ($statement->affected_rows > 0) {
         return true; // Conversation saved successfully
