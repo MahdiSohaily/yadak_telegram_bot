@@ -407,7 +407,7 @@ require_once './app/Controllers/TelegramController.php';
                         await getPrice(codes).then(data => {
 
                             for (item of data) {
-                                template += `${messageInfo.name[0]}: ${item.partnumber} : ${item.price} \n`;
+                                template += `${item.partnumber} : ${item.price} \n`;
                             }
 
                             saveConversation(sender, codes.join(' '), template);
@@ -581,6 +581,6 @@ require_once './app/Controllers/TelegramController.php';
     getPartialContacts();
     getPartialsSelectedGoods();
 
-    setInterval(getMessagesAuto, 600000);
+    setInterval(getMessagesAuto, 150000);
 </script>
 <?php require_once './layouts/footer.php';
