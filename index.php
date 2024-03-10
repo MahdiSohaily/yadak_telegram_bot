@@ -387,9 +387,19 @@ require_once './app/Controllers/TelegramController.php';
         }
     }
 
+    AllMessages = {
+        "169785118": {
+            "userName": ["169785118"],
+            "info": [{
+                "code": "58101A7A00\n",
+                "message": "58101A7A00"
+            }],
+            "name": ["Mahdi Rezaei"]
+        }
+    }
+
     async function checkMessages() {
         for (messageInfo of Object.values(AllMessages)) {
-            // const sender = '169785118';
             const sender = messageInfo.userName[0];
             let displayPrices = [];
 
@@ -399,16 +409,21 @@ require_once './app/Controllers/TelegramController.php';
                 for (let i = 0; i < messageContent.length; i++) {
                     const item = messageContent[i];
                     let codes = item.code.split('\n');
+                    codes = codes.filter(line => line != "");
 
-                    codes = codes.filter(function(line) {
-                        return line != "";
+                    // Map each code to an async function call and wait for all promises to resolve
+                    const promises = codes.map(async (line) => {
+                        const isGood = await isGoodSelected(line);
+                        return isGood ? line : null; // Filter out codes that are not good
                     });
 
-                    codes = codes.filter(function(line) {
-                        (async () => {
-                            return await isGoodSelected(line);
-                        })();
-                    });
+                    // Wait for all promises to resolve
+                    const filteredCodes = await Promise.all(promises);
+
+                    console.log(filteredCodes);
+
+                    // Remove null or undefined elements from the array
+                    codes = filteredCodes.filter(code => code);
 
                     if (codes.length) {
                         try {
@@ -428,8 +443,23 @@ require_once './app/Controllers/TelegramController.php';
                     }
                 }
             }
-
         }
+    }
+
+    async function isGoodSelected(partnumber) {
+        var params = new URLSearchParams();
+        params.append('isGoodSelected', 'isGoodSelected');
+        params.append('partnumber', partnumber);
+
+        const result = await axios.post("./app/api/partNumberApi.php", params)
+            .then(function(response) {
+                const data = response.data;
+                return data;
+            })
+            .catch(function(error) {
+                console.log(error);
+            });
+        return result;
     }
 
     function saveConversation(receiver, request = '', response = '') {
@@ -591,26 +621,9 @@ require_once './app/Controllers/TelegramController.php';
             });
     }
 
-    function isGoodSelected(partnumber) {
-        var params = new URLSearchParams();
-        params.append('isGoodSelected', 'isGoodSelected');
-        params.append('partnumber', partnumber);
-
-        axios.post("./app/api/partNumberApi.php", params)
-            .then(function(response) {
-                const data = response.data;
-                if (data == 'true') {
-                    window.location.reload();
-                }
-            })
-            .catch(function(error) {
-                console.log(error);
-            });
-    }
-
     getPartialContacts();
     getPartialsSelectedGoods();
-
+    checkMessages();
     // setInterval(getMessagesAuto, 150000);
 </script>
 <?php require_once './layouts/footer.php';

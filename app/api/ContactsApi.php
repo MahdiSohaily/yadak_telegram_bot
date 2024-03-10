@@ -168,7 +168,7 @@ if (isset($_POST['isGoodSelected'])) {
 
 function isGoodSelected($partnumber)
 {
-    $sql = "SELECT COUNT(partnumber) AS total FROM telegram.goods_for_sell WHERE partnumber = '$partnumber'";
+    $sql = "SELECT COUNT(partNumber) AS total FROM telegram.goods_for_sell WHERE partNumber LIKE %'$partnumber'%";
     $result = CONN->query($sql);
     $result = $result->fetch_assoc()['total'];
 
