@@ -446,22 +446,25 @@ require_once './app/Controllers/TelegramController.php';
         }
     }
 
-    function isGoodSelected(partnumber) {
+    async function isGoodSelected(partnumber) {
+        // Add logging to see which partnumbers are being processed
+        console.log('Processing partnumber:', partnumber);
+
         var params = new URLSearchParams();
         params.append('checkGood', 'checkGood');
         params.append('partnumber', partnumber);
 
-        axios.post("./app/api/partNumberApi.php", params)
+        const result = await axios.post("./app/api/ValidationApi.php", params)
             .then(function(response) {
                 const data = response.data;
-                console.log(response);
+                return data;
             })
             .catch(function(error) {
                 console.log(error);
             });
+        return result;
     }
 
-    isGoodSelected('58101A7A00');
 
 
     function saveConversation(receiver, request = '', response = '') {
@@ -625,7 +628,7 @@ require_once './app/Controllers/TelegramController.php';
 
     getPartialContacts();
     getPartialsSelectedGoods();
-    // checkMessages();
+    checkMessages();
     // setInterval(getMessagesAuto, 150000);
 </script>
 <?php require_once './layouts/footer.php';
