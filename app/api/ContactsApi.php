@@ -156,3 +156,25 @@ function saveConversation($receiver, $request, $response)
         return false; // Failed to save conversation
     }
 }
+
+
+if (isset($_POST['isGoodSelected'])) {
+    $partnumber = $_POST['partnumber'];
+
+    header('Content-Type: application/json');
+    echo isGoodSelected($partnumber);
+}
+
+
+function isGoodSelected($partnumber)
+{
+    $sql = "SELECT COUNT(partnumber) AS total FROM telegram.goods_for_sell WHERE partnumber = '$partnumber'";
+    $result = CONN->query($sql);
+    $result = $result->fetch_assoc()['total'];
+
+    if ($result) {
+        return true;
+    } else {
+        return false;
+    }
+}

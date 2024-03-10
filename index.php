@@ -240,7 +240,6 @@ require_once './app/Controllers/TelegramController.php';
             .catch(function(error) {
                 console.log(error);
             });
-
     }
 
     function deleteContact(id) {
@@ -396,30 +395,40 @@ require_once './app/Controllers/TelegramController.php';
 
             if (existingContacts.includes(sender + '')) {
                 const messageContent = messageInfo.info;
-                let template = ``;
 
-                for (item of messageContent) {
+                for (let i = 0; i < messageContent.length; i++) {
+                    const item = messageContent[i];
                     let codes = item.code.split('\n');
 
-
                     codes = codes.filter(function(line) {
-                        return line != "" && definedCodes.includes(line);
+                        return line != "";
                     });
 
+                    codes = codes.filter(function(line) {
+                        (async () => {
+                            return await isGoodSelected(line);
+                        })();
+                    });
 
                     if (codes.length) {
-                        await getPrice(codes).then(data => {
+                        try {
+                            const data = await getPrice(codes);
+                            let template = '';
 
-                            for (item of data) {
+                            for (let j = 0; j < data.length; j++) {
+                                const item = data[j];
                                 template += `${item.partnumber} : ${item.price} \n`;
                             }
 
                             saveConversation(sender, codes.join(' '), template);
-                            sendMessageWithTemplate(sender, template);
-                        });
+                            await sendMessageWithTemplate(sender, template);
+                        } catch (error) {
+                            console.error('Error fetching price:', error);
+                        }
                     }
                 }
             }
+
         }
     }
 
@@ -575,6 +584,23 @@ require_once './app/Controllers/TelegramController.php';
                         counter++;
                     }
                     partialSelectedGoods.innerHTML = template;
+                }
+            })
+            .catch(function(error) {
+                console.log(error);
+            });
+    }
+
+    function isGoodSelected(partnumber) {
+        var params = new URLSearchParams();
+        params.append('isGoodSelected', 'isGoodSelected');
+        params.append('partnumber', partnumber);
+
+        axios.post("./app/api/partNumberApi.php", params)
+            .then(function(response) {
+                const data = response.data;
+                if (data == 'true') {
+                    window.location.reload();
                 }
             })
             .catch(function(error) {
