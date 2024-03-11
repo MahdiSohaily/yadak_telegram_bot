@@ -37,27 +37,7 @@ $response = '{
             {"code":"58101A7A00\n","message":"58101-A7A00","date":1710145143}],
         "name":["Mahdi Rezaei"],
         "userName":[169785118],
-        "profile":["169785118_x_4.jpg"]},
-    "5684446360":{
-        "info":[
-            {"code":"86565C5010\n","message":"86565-C5010\n\n\n?????","date":1710145141}],
-        "name":["Azimi Store"],
-        "userName":[5684446360],
-        "profile":["5684446360_x_4.jpg"]},
-    "483892514":{
-        "info":[
-            {"code":"935702W050\n","message":"93570-2W050\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n?????????????","date":1710145139},{"code":"553003X110\n","message":"55300-3X110\n\n\n\n\nAsli\n\n\n\n\n\n??","date":1710145084},{"code":"553003X110\n","message":"55300-3X110","date":1710144956}],
-        "name":["Afshin Afshar","Afshin Afshar","Afshin Afshar"],
-        "userName":[483892514,483892514,483892514],
-        "profile":["483892514_x_4.jpg","483892514_x_4.jpg","483892514_x_4.jpg"]},
-    "370163101":{
-        "info":[
-            {"code":"865113L010\n","message":"86511-3L010\n\n\n\ud83c\udd70\ufe0f\ud83c\udd70\ufe0f\ud83c\udd70\ufe0f\ud83c\udd70\ufe0f\ud83c\udd70\ufe0f\ud83c\udd70\ufe0f\ud83c\udd70\ufe0f\ud83c\udd70\ufe0f\ud83c\udd70\ufe0f","date":1710145137},
-            {"code":"865113L010\n","message":"86511-3L010\n\n\n\ud83c\udd70\ufe0f\ud83c\udd70\ufe0f\ud83c\udd70\ufe0f\ud83c\udd70\ufe0f\ud83c\udd70\ufe0f\ud83c\udd70\ufe0f\ud83c\udd70\ufe0f\ud83c\udd70\ufe0f\ud83c\udd70\ufe0f","date":1710145045}
-        ],
-        "name":["Ali . R E Z A A L I","Ali . R E Z A A L I"],
-        "userName":[370163101,370163101],
-        "profile":["370163101_x_4.jpg","370163101_x_4.jpg"]}
+        "profile":["169785118_x_4.jpg"]}
     }';
 
 // // Check for errors
@@ -102,20 +82,18 @@ function validateMessages($messages)
 
         foreach ($messageContent as $item) {
             $codes = explode("\n", $item['code']);
-            echo "Before processing";
-            print_r($codes);
 
             $codes = array_filter($codes, function ($line) use ($selectedGoods) {
                 return $line !== "" && in_array($line, $selectedGoods);
             });
             // Now $codes contains the filtered codes
 
-            echo "After processing";
-            print_r($codes);
-
             if (count($codes) > 0) {
                 try {
                     $data = getPrice($codes);
+
+                    print_r($data);
+
                     $template = '';
 
                     foreach ($data as $item) {
@@ -128,6 +106,8 @@ function validateMessages($messages)
                 } catch (Exception $error) {
                     echo 'Error fetching price: ' . $error->getMessage();
                 }
+            } else {
+                echo "No valid codes found";
             }
         }
     }

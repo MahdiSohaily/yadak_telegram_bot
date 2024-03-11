@@ -23,7 +23,6 @@ function checkIfValidSender($sender)
     }
 }
 
-
 function getSelectedGoods()
 {
     $sql = "SELECT partNumber FROM telegram.goods_for_sell";
@@ -34,8 +33,8 @@ function getSelectedGoods()
 
 function getPrice($codes)
 {
-    $completeCode = $codes.join("\n");
-    $finalResult = (setup_loading($completeCode));
+    $completeCode = $codes;
+    $finalResult = (setup_loading($codes));
 
     $explodedCodes = &$finalResult['explodedCodes'];
     $not_exist = &$finalResult['not_exist'];
@@ -70,8 +69,20 @@ function getPrice($codes)
 
 function setup_loading($completeCode)
 {
-    $conn = CONN;
-    $explodedCodes = explode("\n", $completeCode);
+    $completeCode = array("58101A7A00"); // Example array containing code(s)
+
+    var_dump($completeCode);
+
+    $conn = CONN; // Assuming CONN is your database connection
+
+    foreach ($completeCode as $givenCode) {
+        if (is_string($givenCode)) {
+            $explodedCodes = explode("\n", $givenCode);
+            // Process $explodedCodes as needed
+        } else {
+            // Handle non-string elements of $completeCode array, if any
+        }
+    }
 
     $results_array = [
         'not_exist' => [],
@@ -170,7 +181,6 @@ function setup_loading($completeCode)
     ]);
 }
 
-
 /**
  * @param Connection to the database
  * @return array of rates selected to be used in the goods report table
@@ -178,7 +188,7 @@ function setup_loading($completeCode)
 function getSelectedRates($conn)
 {
 
-    $sql = "SELECT amount, status FROM rates WHERE selected = '1' ORDER BY amount ASC";
+    $sql = "SELECT amount, status FROM shop.rates WHERE selected = '1' ORDER BY amount ASC";
     $result = mysqli_query($conn, $sql);
 
     $rates = [];
@@ -198,7 +208,7 @@ function getSelectedRates($conn)
  */
 function isInRelation($conn, $id)
 {
-    $sql = "SELECT pattern_id FROM similars WHERE nisha_id = '$id'";
+    $sql = "SELECT pattern_id FROM shop.similars WHERE nisha_id = '$id'";
     $result = mysqli_query($conn, $sql);
 
     if (mysqli_num_rows($result) > 0) {
@@ -221,7 +231,7 @@ function info($conn, $relation_exist = null)
     $cars = [];
     if ($relation_exist) {
 
-        $sql = "SELECT * FROM patterns WHERE id = '" . $relation_exist . "'";
+        $sql = "SELECT * FROM shop.patterns WHERE id = '" . $relation_exist . "'";
         $result = mysqli_query($conn, $sql);
 
         $info = null;
@@ -230,14 +240,22 @@ function info($conn, $relation_exist = null)
         }
 
         if ($info['status_id'] !== 0) {
-            $sql = "SELECT patterns.*, status.name AS  status_name FROM patterns INNER JOIN status ON status.id = patterns.status_id WHERE patterns.id = '" . $relation_exist . "'";
+            $sql = "SELECT shop.patterns.*, status.name AS  status_name 
+                    FROM shop.patterns 
+                    INNER JOIN shop.status ON status.id = patterns.status_id 
+                    WHERE patterns.id = '" . $relation_exist . "'";
+
             $result = mysqli_query($conn, $sql);
             if (mysqli_num_rows($result) > 0) {
                 $info = mysqli_fetch_assoc($result);
             }
         }
 
-        $sql = "SELECT cars.name FROM patterncars INNER JOIN cars ON cars.id = patterncars.car_id WHERE patterncars.pattern_id = '" . $relation_exist . "'";
+        $sql = "SELECT cars.name 
+                FROM shop.patterncars 
+                INNER JOIN shop.cars ON cars.id = patterncars.car_id 
+                WHERE patterncars.pattern_id = '" . $relation_exist . "'";
+
         $result = mysqli_query($conn, $sql);
 
         if (mysqli_num_rows($result) > 0) {
@@ -257,7 +275,10 @@ function relations($conn, $id, $condition)
 
     if ($condition) {
 
-        $sql = "SELECT yadakshop1402.nisha.* FROM yadakshop1402.nisha INNER JOIN similars ON similars.nisha_id = nisha.id WHERE similars.pattern_id = '" . $id . "'";
+        $sql = "SELECT yadakshop1402.nisha.* 
+                FROM yadakshop1402.nisha 
+                INNER JOIN shop.similars ON similars.nisha_id = nisha.id 
+                WHERE similars.pattern_id = '" . $id . "'";
 
         $result = mysqli_query($conn, $sql);
         if (mysqli_num_rows($result) > 0) {
@@ -322,7 +343,8 @@ function givenPrice($conn, $codes, $relation_exist = null)
 
 
     if ($relation_exist) {
-        $out_sql = "SELECT patterns.price, patterns.created_at FROM patterns WHERE id = '" . $relation_exist . "'";
+        $out_sql = "SELECT patterns.price, patterns.created_at 
+                    FROM shop.patterns WHERE id = '" . $relation_exist . "'";
         $out_result = mysqli_query($conn, $out_sql);
 
         if (mysqli_num_rows($out_result) > 0) {
@@ -333,11 +355,11 @@ function givenPrice($conn, $codes, $relation_exist = null)
 
     $givenPrices = [];
     $sql = "SELECT  prices.id, prices.price, prices.partnumber, customer.name, customer.id AS customerID, customer.family, users.id AS userID, prices.created_at
-    FROM ((prices 
-    INNER JOIN callcenter.customer ON customer.id = prices.customer_id)
-    INNER JOIN yadakshop1402.users ON users.id = prices.user_id)
-    WHERE partnumber IN ('" . implode("','", $codes) . "')
-    ORDER BY created_at DESC LIMIT 7";
+            FROM ((shop.prices 
+            INNER JOIN callcenter.customer ON customer.id = prices.customer_id)
+            INNER JOIN yadakshop1402.users ON users.id = prices.user_id)
+            WHERE partnumber IN ('" . implode("','", $codes) . "')
+            ORDER BY created_at DESC LIMIT 7";
 
     $result = mysqli_query($conn, $sql);
     while ($item = mysqli_fetch_assoc($result))
@@ -377,7 +399,9 @@ function givenPrice($conn, $codes, $relation_exist = null)
 function estelam($conn, $code)
 {
     $code = strtolower($code);
-    $sql = "SELECT * FROM callcenter.estelam INNER JOIN yadakshop1402.seller ON seller.id = estelam.seller WHERE codename LIKE '" . $code . "%' ORDER BY time ASC LIMIT 7;";
+    $sql = "SELECT * FROM callcenter.estelam 
+            INNER JOIN yadakshop1402.seller ON seller.id = estelam.seller 
+            WHERE codename LIKE '" . $code . "%' ORDER BY time ASC LIMIT 7;";
     $result = mysqli_query($conn, $sql);
 
 
@@ -416,7 +440,10 @@ function stockInfo($conn, $id, $brand)
         $brand_id = mysqli_fetch_assoc($out_result);
     }
 
-    $qtybank_sql = "SELECT qtybank.id, qtybank.qty, seller.name FROM yadakshop1402.qtybank INNER JOIN yadakshop1402.seller ON qtybank.seller = seller.id WHERE codeid = '" . $id . "' AND brand= '" . $brand_id['id'] . "'";
+    $qtybank_sql = "SELECT qtybank.id, qtybank.qty, seller.name 
+                    FROM yadakshop1402.qtybank 
+                    INNER JOIN yadakshop1402.seller ON qtybank.seller = seller.id 
+                    WHERE codeid = '" . $id . "' AND brand= '" . $brand_id['id'] . "'";
     $qtybank_data = mysqli_query($conn, $qtybank_sql);
 
     $result = [];
@@ -463,16 +490,16 @@ function exist($conn, $id)
 
     if (count($id) == 1) {
         $data_sql = "SELECT yadakshop1402.qtybank.id, codeid, brand.name, qty, create_time as invoice_date,seller.name As seller_name
-                FROM (( yadakshop1402.qtybank 
-                INNER JOIN yadakshop1402.brand ON brand.id = qtybank.brand )
-                INNER JOIN yadakshop1402.seller ON seller.id = qtybank.seller)
-                WHERE codeid = '" . current($id) . "'";
+                    FROM (( yadakshop1402.qtybank 
+                    INNER JOIN yadakshop1402.brand ON brand.id = qtybank.brand )
+                    INNER JOIN yadakshop1402.seller ON seller.id = qtybank.seller)
+                    WHERE codeid = '" . current($id) . "'";
     } else {
         $data_sql = "SELECT yadakshop1402.qtybank.id, codeid, brand.name, qty, create_time as invoice_date,seller.name As seller_name
-                FROM (( yadakshop1402.qtybank 
-                INNER JOIN yadakshop1402.brand ON brand.id = qtybank.brand )
-                INNER JOIN yadakshop1402.seller ON seller.id = qtybank.seller)
-                WHERE codeid IN ('" . implode("','", $id) . "')";
+                    FROM (( yadakshop1402.qtybank 
+                    INNER JOIN yadakshop1402.brand ON brand.id = qtybank.brand )
+                    INNER JOIN yadakshop1402.seller ON seller.id = qtybank.seller)
+                    WHERE codeid IN ('" . implode("','", $id) . "')";
     }
 
     $data_result = mysqli_query($conn, $data_sql);
@@ -552,10 +579,10 @@ function inventorySpecification($conn, $id, $type)
     $sql = '';
     switch ($type) {
         case 'r':
-            $sql = "SELECT original, fake FROM good_limit_inventory WHERE pattern_id = '" . $id . "'";
+            $sql = "SELECT original, fake FROM shop.good_limit_inventory WHERE pattern_id = '" . $id . "'";
             break;
         case 's':
-            $sql = "SELECT original, fake FROM good_limit_inventory WHERE nisha_id = '" . $id . "'";
+            $sql = "SELECT original, fake FROM shop.good_limit_inventory WHERE nisha_id = '" . $id . "'";
             break;
     }
 
@@ -571,10 +598,10 @@ function overallSpecification($conn, $id, $type)
     $sql = '';
     switch ($type) {
         case 'r':
-            $sql = "SELECT original AS original_all, fake As fake_all FROM good_limit_all WHERE pattern_id = '" . $id . "'";
+            $sql = "SELECT original AS original_all, fake As fake_all FROM shop.good_limit_all WHERE pattern_id = '" . $id . "'";
             break;
         case 's':
-            $sql = "SELECT original AS original_all, fake As fake_all FROM good_limit_all WHERE nisha_id = '" . $id . "'";
+            $sql = "SELECT original AS original_all, fake As fake_all FROM shop.good_limit_all WHERE nisha_id = '" . $id . "'";
             break;
     }
     $limit_all = $conn->query($sql);
