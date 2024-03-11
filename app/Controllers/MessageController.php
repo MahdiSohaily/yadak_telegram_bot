@@ -149,18 +149,25 @@ function sendMessageWithTemplate($receiver, $template)
     return $response;
 }
 
+function saveConversation($receiver, $request, $response)
+{
+    // Prepare the SQL statement
+    $sql = "INSERT INTO telegram.messages (receiver, request, response) VALUES (?, ?, ?)";
 
+    // Prepare the statement
+    $statement = CONN->prepare($sql);
 
+    // Bind parameters and execute the statement
+    $statement->bind_param("iss", $receiver, $request, $response);
+    $statement->execute();
 
-
-
-
-
-
-
-
-
-
+    // Check if the insertion was successful
+    if ($statement->affected_rows > 0) {
+        return true; // Conversation saved successfully
+    } else {
+        return false; // Failed to save conversation
+    }
+}
 
 function getPrice($codes)
 {
