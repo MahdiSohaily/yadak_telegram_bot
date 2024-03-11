@@ -1,6 +1,7 @@
 <?php
 require_once './config/constants.php';
 require_once './database/connect.php';
+require_once './utilities/PriceHelpers.php';
 require_once './app/Controllers/MessageController.php';
 
 // API endpoint URL
@@ -51,10 +52,8 @@ if (curl_errno($curl)) {
     }
 }
 
-
 function validateMessages($messages)
 {
-    var_dump($messages); // Debugging
     foreach ($messages as $message) {
         $sender = $message['userName'][0];
 
@@ -65,12 +64,37 @@ function validateMessages($messages)
 
         $messageContent = $message['info'];
 
+        $selectedGoods = array_column(getSelectedGoods(), 'partNumber');
+
         foreach ($messageContent as $item) {
             $codes = explode("\n", $item['code']);
-            $codes = array_filter($codes, function ($line) {
-                return $line !== "";
+            echo "Before processing";
+            print_r($codes);
+
+            $codes = array_filter($codes, function ($line) use ($selectedGoods) {
+                return $line !== "" && in_array($line, $selectedGoods);
             });
             // Now $codes contains the filtered codes
+
+            echo "After processing";
+            print_r($codes);
+
+            if (count($codes) > 0) {
+                try {
+                    $data = getPrice($codes);
+                    $template = '';
+
+                    foreach ($data as $item) {
+                        $template .= $item['partnumber'] . ' : ' . $item['price'] . "\n";
+                    }
+
+                    echo $template;
+                    // saveConversation($sender, implode(' ', $codes), $template);
+                    // sendMessageWithTemplate($sender, $template);
+                } catch (Exception $error) {
+                    echo 'Error fetching price: ' . $error->getMessage();
+                }
+            }
         }
     }
 }

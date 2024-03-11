@@ -387,6 +387,17 @@ require_once './app/Controllers/TelegramController.php';
         }
     }
 
+    AllMessages = {
+        "169785118": {
+            "userName": ["169785118"],
+            "info": [{
+                "code": "58101A7A00\n",
+                "message": "58101A7A00"
+            }],
+            "name": ["Mahdi Rezaei"]
+        }
+    }
+
     async function checkMessages() {
         for (messageInfo of Object.values(AllMessages)) {
             const sender = messageInfo.userName[0];
