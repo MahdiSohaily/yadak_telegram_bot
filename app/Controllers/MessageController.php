@@ -25,11 +25,50 @@ function checkIfValidSender($sender)
 
 function getSelectedGoods()
 {
-    $sql = "SELECT partNumber FROM telegram.goods_for_sell";
+    $sql = "SELECT good_id, partNumber FROM telegram.goods_for_sell";
     $result = CONN->query($sql);
     $selectedGoods = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    $all_ids = array_column($selectedGoods, 'partNumber');
+
+    foreach ($all_ids as $id) {
+        $nisha_id = isInRelation(CONN, $id);
+        if (!$nisha_id) {
+            break;
+        }
+    }
+
     return $selectedGoods;
 }
+
+function getInRelationItems($nisha_id)
+{
+    $sql = "SELECT nisha_id FROM shop.similars WHERE pattern_id = '$nisha_id'";
+    $result = CONN->query($sql);
+    $goods = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    $all_ids = array_column($goods, 'nisha_id');
+
+    if(count($all_ids) == 0) {
+        return false;
+    }
+
+    $partNumberSQL = "SELECT partnumber FROM yadakshop1402.nisha WHERE id IN ($all_ids)";
+
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function getPrice($codes)
 {
@@ -49,7 +88,7 @@ function getPrice($codes)
                     foreach ($item['givenPrice'] as &$price) {
                         $priceDate = $price['created_at'];
 
-                        if (checkDateIfOkay($GLOBALS['applyDate'], $priceDate) && $item['price'] !== 'موجود نیست') {
+                        if (checkDateIfOkay($GLOBALS['applyDate'], $priceDate)) {
                             $rawGivenPrice = $price['price'];
                             $price['price'] = applyDollarRate($rawGivenPrice, $GLOBALS['applyDate']);
                         }

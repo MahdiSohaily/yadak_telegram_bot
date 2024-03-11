@@ -34,7 +34,7 @@ curl_setopt_array($curl, [
 $response = '{
     "169785118":{
         "info":[
-            {"code":"58101A7A00\n","message":"58101-A7A00","date":1710145143}],
+            {"code":"58101A7A00FFF\n","message":"58101-A7A00","date":1710145143}],
         "name":["Mahdi Rezaei"],
         "userName":[169785118],
         "profile":["169785118_x_4.jpg"]}
@@ -91,8 +91,7 @@ function validateMessages($messages)
             if (count($codes) > 0) {
                 try {
                     $data = getPrice($codes);
-
-                    print_r($data);
+                    $data = getFinalPrice($data);
 
                     $template = '';
 
@@ -113,7 +112,44 @@ function validateMessages($messages)
     }
 }
 
+function getFinalPrice($prices)
+{
+    $explodedCodes = $prices['explodedCodes'];
+    $existing = $prices['existing'];
+    $displayPrices = [];
 
+    foreach ($explodedCodes as $code) {
+        $existingCodes = array_values($existing[$code]);
+        $max = 0;
+
+        foreach ($existingCodes as $item) {
+            $max += max(array_values($item['relation']['sorted']));
+        }
+
+        echo $max;
+
+        if ($max <= 0) {
+            return false;
+        }
+
+        $givenPrice = $existingCodes[0]['givenPrice'];
+
+        if (!is_array($givenPrice)) {
+            $givenPrice = array_values($givenPrice);
+        }
+
+        if (count($givenPrice) > 0) {
+            $displayPrices[] = [
+                'partnumber' => $givenPrice[0]['partnumber'],
+                'price' => $givenPrice[0]['price']
+            ];
+        } else {
+           return false;
+        }
+    }
+
+    return $displayPrices;
+}
 
 
 // Close curl
