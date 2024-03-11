@@ -4,10 +4,11 @@ require_once '../../database/connect.php';
 require_once '../Middlewares/AuthMiddleware.php';
 
 
+
 if (isset($_POST['checkGood'])) {
     $partnumber = $_POST['partnumber'];
     echo checkGoodPartNumber($partnumber);;
-} 
+}
 
 
 function checkGoodPartNumber($partnumber)

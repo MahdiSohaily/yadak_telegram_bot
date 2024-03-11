@@ -1,8 +1,11 @@
 <?php
+require_once './config/constants.php';
+require_once './database/connect.php';
+require_once './app/Controllers/MessageController.php';
+
 // API endpoint URL
 $apiUrl = 'http://telegram.om-dienstleistungen.de/';
 
-// Data to send in the POST request (example)
 $postData = [
     'getMessagesAuto' => 'getMessagesAuto'
 ];
@@ -38,13 +41,32 @@ if (curl_errno($curl)) {
     if ($statusCode >= 200 && $statusCode < 300) {
         // Request was successful
         $response = json_decode($response, true);
-        print_r(array_values($response));
+        $response = array_values($response);
+
+        validateMessages($response);
     } else {
         // Request failed
         echo "Request failed with status code $statusCode";
         // You can handle different status codes here
     }
 }
+
+
+function validateMessages($messages)
+{
+    var_dump($messages); // Debugging
+    foreach ($messages as $message) {
+        $sender = $message['userName'][0];
+
+        if (!checkIfValidSender($sender)) {
+            echo "Sender $sender is not valid";
+            break;
+        }
+    }
+}
+
+
+
 
 // Close curl
 curl_close($curl);
