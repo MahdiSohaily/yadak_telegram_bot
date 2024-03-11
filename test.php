@@ -90,7 +90,7 @@ function validateMessages($messages)
                     }
 
                     echo $template;
-                    // saveConversation($sender, implode(' ', $codes), $template);
+                    saveConversation($sender, implode(' ', $codes), $template);
                     // sendMessageWithTemplate($sender, $template);
                 } catch (Exception $error) {
                     echo 'Error fetching price: ' . $error->getMessage();
