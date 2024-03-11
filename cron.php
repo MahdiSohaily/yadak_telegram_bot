@@ -6,7 +6,8 @@ require_once './app/Controllers/MessageController.php';
 
 function boot()
 {
-    echo "Cron job started\n";
+    $now = date('Y-m-d H:i:s');
+    echo "Cron job started ( $now ) \n";
     // API endpoint URL
     $apiUrl = 'http://telegram.om-dienstleistungen.de/';
 
@@ -64,7 +65,6 @@ function validateMessages($messages)
     foreach ($messages as $message) {
         $sender = $message['userName'][0];
         if (!checkIfValidSender($sender)) {
-            echo "Sender $sender is not valid";
             continue;
         }
 
@@ -93,7 +93,7 @@ function validateMessages($messages)
                         $template .= $item['partnumber'] . ' : ' . $item['price'] . "\n";
                     }
 
-                    echo $template;
+                    echo $template . "\n";
                     saveConversation($sender, implode(' ', $codes), $template);
                     if ($template !== '')
                         sendMessageWithTemplate($sender, $template);
@@ -103,7 +103,7 @@ function validateMessages($messages)
             } else {
                 if (count($rawCodes) > 0) {
                     echo implode(', ', $rawCodes);
-                    echo "کد مدنظر اضافه نشده" . "\n\n";
+                    echo " کد مدنظر اضافه نشده " . "\n";
                 }
             }
         }
