@@ -29,40 +29,30 @@ curl_setopt_array($curl, [
 ]);
 
 // Execute the request
-// $response = curl_exec($curl);
+$response = curl_exec($curl);
 
-$response = '{
-    "169785118":{
-        "info":[
-            {"code":"58101A7A00FFF\n","message":"58101-A7A00","date":1710145143}],
-        "name":["Mahdi Rezaei"],
-        "userName":[169785118],
-        "profile":["169785118_x_4.jpg"]}
-    }';
 
-// // Check for errors
-// if (curl_errno($curl)) {
-//     $errorMessage = curl_error($curl);
-//     // Handle the error
-//     echo "cURL error: $errorMessage";
-// } else {
-//     // Handle the response` 
-//     $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE); // Get HTTP status code
-//     if ($statusCode >= 200 && $statusCode < 300) {
-//         // Request was successful
-//         $response = json_decode($response, true);
-//         $response = array_values($response);
 
-//         validateMessages($response);
-//     } else {
-//         // Request failed
-//         echo "Request failed with status code $statusCode";
-//         // You can handle different status codes here
-//     }
-// }
+// Check for errors
+if (curl_errno($curl)) {
+    $errorMessage = curl_error($curl);
+    // Handle the error
+    echo "cURL error: $errorMessage";
+} else {
+    // Handle the response` 
+    $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE); // Get HTTP status code
+    if ($statusCode >= 200 && $statusCode < 300) {
+        // Request was successful
+        $response = json_decode($response, true);
+        $response = array_values($response);
 
-$response = json_decode($response, true);
-$response = array_values($response);
+        validateMessages($response);
+    } else {
+        // Request failed
+        echo "Request failed with status code $statusCode";
+        // You can handle different status codes here
+    }
+}
 
 validateMessages($response);
 
@@ -73,12 +63,12 @@ function validateMessages($messages)
 
         if (!checkIfValidSender($sender)) {
             echo "Sender $sender is not valid";
-            break;
+            continue;
         }
 
         $messageContent = $message['info'];
 
-        $selectedGoods = array_column(getSelectedGoods(), 'partNumber');
+        $selectedGoods = getSelectedGoods();
 
         foreach ($messageContent as $item) {
             $codes = explode("\n", $item['code']);
@@ -126,8 +116,6 @@ function getFinalPrice($prices)
             $max += max(array_values($item['relation']['sorted']));
         }
 
-        echo $max;
-
         if ($max <= 0) {
             return false;
         }
@@ -144,7 +132,7 @@ function getFinalPrice($prices)
                 'price' => $givenPrice[0]['price']
             ];
         } else {
-           return false;
+            return false;
         }
     }
 

@@ -25,36 +25,93 @@ function checkIfValidSender($sender)
 
 function getSelectedGoods()
 {
-    $sql = "SELECT good_id, partNumber FROM telegram.goods_for_sell";
-    $result = CONN->query($sql);
-    $selectedGoods = mysqli_fetch_all($result, MYSQLI_ASSOC);
-    $all_ids = array_column($selectedGoods, 'partNumber');
+    $conn = CONN; // Assuming CONN is your database connection object
 
-    foreach ($all_ids as $id) {
-        $nisha_id = isInRelation(CONN, $id);
-        if (!$nisha_id) {
-            break;
-        }
+    // Fetch data from the database
+    $sql = "SELECT good_id, partNumber FROM telegram.goods_for_sell";
+    $result = $conn->query($sql);
+
+    // Check for errors
+    if (!$result) {
+        // Handle the error (e.g., log it, return an error message, etc.)
+        return [];
     }
 
-    return $selectedGoods;
+    // Fetch all rows as associative arrays
+    $selectedGoods = $result->fetch_all(MYSQLI_ASSOC);
+
+    // Extract partNumbers
+    $partNumbers = array_column($selectedGoods, 'partNumber');
+
+    // Extract all_ids
+    $allIds = array_column($selectedGoods, 'good_id');
+
+    // Iterate over all_ids to find related items
+    foreach ($allIds as $id) {
+        // Find relation for each id
+        $nishaId = findRelation($id);
+
+        // If relation not found, continue to the next id
+        if (!$nishaId) {
+            continue;
+        }
+
+        // Get related items and concatenate their partNumbers
+        $relatedPartNumbers = getInRelationItems($nishaId);
+
+        // Check for errors or empty result
+        if (!$relatedPartNumbers) {
+            continue;
+        }
+
+        // Merge the new partNumbers with existing partNumbers
+        $partNumbers = array_merge($partNumbers, $relatedPartNumbers);
+    }
+
+    return $partNumbers;
 }
+
 
 function getInRelationItems($nisha_id)
 {
+    // Fetch similar items based on the provided nisha_id
     $sql = "SELECT nisha_id FROM shop.similars WHERE pattern_id = '$nisha_id'";
     $result = CONN->query($sql);
     $goods = mysqli_fetch_all($result, MYSQLI_ASSOC);
     $all_ids = array_column($goods, 'nisha_id');
 
-    if(count($all_ids) == 0) {
+    if (count($all_ids) == 0) {
         return false;
     }
 
-    $partNumberSQL = "SELECT partnumber FROM yadakshop1402.nisha WHERE id IN ($all_ids)";
+    // Prepare the list of IDs to use in the IN clause of the next query
+    $idList = implode(',', $all_ids);
 
-    
+    // Fetch part numbers of the related items
+    $partNumberSQL = "SELECT partnumber FROM yadakshop1402.nisha WHERE id IN ($idList)";
+    $partNumberResult = CONN->query($partNumberSQL);
+    $partNumbers = mysqli_fetch_all($partNumberResult, MYSQLI_ASSOC);
+
+    return array_column($partNumbers, 'partnumber');
 }
+
+function findRelation($id)
+{
+    // Prepare and execute the SQL query
+    $sql = "SELECT pattern_id FROM shop.similars WHERE nisha_id = '$id' LIMIT 1";
+    $result = CONN->query($sql);
+
+    // Check if there are any rows returned
+    if ($result && $result->num_rows > 0) {
+        // Fetch the first row and return the pattern_id
+        $row = $result->fetch_assoc();
+        return (int) $row['pattern_id']; // Convert to integer and return
+    } else {
+        // No rows found, return false
+        return false;
+    }
+}
+
 
 
 
@@ -109,8 +166,6 @@ function getPrice($codes)
 function setup_loading($completeCode)
 {
     $completeCode = array("58101A7A00"); // Example array containing code(s)
-
-    var_dump($completeCode);
 
     $conn = CONN; // Assuming CONN is your database connection
 
