@@ -7,7 +7,7 @@ require_once './app/Controllers/MessageController.php';
 function boot()
 {
     $now = date('Y-m-d H:i:s');
-    echo "Cron job started ( $now ) \n\n";
+    echo "\n\n Cron job started ( $now ) \n\n";
     // API endpoint URL
     $apiUrl = 'http://telegram.om-dienstleistungen.de/';
 
@@ -93,7 +93,7 @@ function validateMessages($messages)
                         $template .= $item['partnumber'] . ' : ' . $item['price'] . "\n";
                     }
 
-                    echo $template . "\n";
+                    echo "\n".$template . "\n";
                     saveConversation($sender, implode(' ', $codes), $template);
                     if ($template !== '')
                         sendMessageWithTemplate($sender, $template);
