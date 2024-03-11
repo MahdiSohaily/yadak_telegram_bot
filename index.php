@@ -624,6 +624,6 @@ require_once './app/Controllers/TelegramController.php';
 
     getPartialContacts();
     getPartialsSelectedGoods();
-    setInterval(getMessagesAuto, 150000);
+    // setInterval(getMessagesAuto, 150000);
 </script>
 <?php require_once './layouts/footer.php';
