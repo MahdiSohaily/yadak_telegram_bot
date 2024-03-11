@@ -95,8 +95,6 @@ function validateMessages($messages)
                 } catch (Exception $error) {
                     echo 'Error fetching price: ' . $error->getMessage();
                 }
-            } else {
-                echo "No valid codes found";
             }
         }
     }
