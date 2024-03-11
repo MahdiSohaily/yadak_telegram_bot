@@ -2,6 +2,7 @@
 require_once './bootstrap/init.php';
 require_once './layouts/header.php';
 require_once './app/Controllers/MessageController.php';
+$messages = getMessages();
 ?>
 <div class="rtl flex px-5 gap-5 h-screen flex justify-center">
     <section class=" border container lg:w-1/2 border-dotted border-2 rounded-md">

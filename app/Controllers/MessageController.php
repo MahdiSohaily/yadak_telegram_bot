@@ -1,6 +1,4 @@
 <?php
-$messages = getMessages();
-
 function getMessages()
 {
     $sql = "SELECT messages.*, receiver.name, receiver.username FROM telegram.messages
@@ -34,12 +32,9 @@ function getSelectedGoods()
     return $selectedGoods;
 }
 
-
-
 function getPrice($codes)
 {
-
-    $completeCode = $codes;
+    $completeCode = $codes.join("\n");
     $finalResult = (setup_loading($completeCode));
 
     $explodedCodes = &$finalResult['explodedCodes'];
