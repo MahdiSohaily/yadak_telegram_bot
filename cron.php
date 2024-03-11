@@ -6,6 +6,7 @@ require_once './app/Controllers/MessageController.php';
 
 function boot()
 {
+    echo "Cron job started\n";
     // API endpoint URL
     $apiUrl = 'http://telegram.om-dienstleistungen.de/';
 
@@ -94,7 +95,8 @@ function validateMessages($messages)
 
                     echo $template;
                     saveConversation($sender, implode(' ', $codes), $template);
-                    sendMessageWithTemplate($sender, $template);
+                    if ($template !== '')
+                        sendMessageWithTemplate($sender, $template);
                 } catch (Exception $error) {
                     echo 'Error fetching price: ' . $error->getMessage();
                 }
