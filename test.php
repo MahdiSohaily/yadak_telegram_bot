@@ -62,6 +62,16 @@ function validateMessages($messages)
             echo "Sender $sender is not valid";
             break;
         }
+
+        $messageContent = $message['info'];
+
+        foreach ($messageContent as $item) {
+            $codes = explode("\n", $item['code']);
+            $codes = array_filter($codes, function ($line) {
+                return $line !== "";
+            });
+            // Now $codes contains the filtered codes
+        }
     }
 }
 
