@@ -7,7 +7,7 @@ require_once './app/Controllers/MessageController.php';
 function boot()
 {
     $now = date('Y-m-d H:i:s');
-    echo "Cron job started ( $now ) \n";
+    echo "Cron job started ( $now ) \n\n";
     // API endpoint URL
     $apiUrl = 'http://telegram.om-dienstleistungen.de/';
 
