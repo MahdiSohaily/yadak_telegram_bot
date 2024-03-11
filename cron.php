@@ -102,7 +102,7 @@ function validateMessages($messages)
                 }
             } else {
                 if (count($rawCodes) > 0) {
-                    print_r($rawCodes);
+                    echo implode(', ', $rawCodes);
                     echo "کد مدنظر اضافه نشده" . "\n";
                 }
             }
