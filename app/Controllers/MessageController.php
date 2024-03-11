@@ -71,6 +71,7 @@ function getSelectedGoods()
     return $partNumbers;
 }
 
+
 function getInRelationItems($nisha_id)
 {
     // Fetch similar items based on the provided nisha_id
@@ -111,6 +112,7 @@ function findRelation($id)
     }
 }
 
+
 function sendMessageWithTemplate($receiver, $template)
 {
     // Prepare POST data
@@ -147,30 +149,23 @@ function sendMessageWithTemplate($receiver, $template)
     return $response;
 }
 
-function saveConversation($receiver, $request, $response)
-{
-    // Prepare the SQL statement
-    $sql = "INSERT INTO telegram.messages (receiver, request, response) VALUES (?, ?, ?)";
 
-    // Prepare the statement
-    $statement = CONN->prepare($sql);
 
-    // Bind parameters and execute the statement
-    $statement->bind_param("iss", $receiver, $request, $response);
-    $statement->execute();
 
-    // Check if the insertion was successful
-    if ($statement->affected_rows > 0) {
-        return true; // Conversation saved successfully
-    } else {
-        return false; // Failed to save conversation
-    }
-}
+
+
+
+
+
+
+
+
+
 
 function getPrice($codes)
 {
     $completeCode = $codes;
-    $finalResult = (setupLoading($codes));
+    $finalResult = (setup_loading($codes));
 
     $explodedCodes = &$finalResult['explodedCodes'];
     $not_exist = &$finalResult['not_exist'];
@@ -203,78 +198,114 @@ function getPrice($codes)
     }
 }
 
-function setupLoading($completeCode)
+function setup_loading($completeCode)
 {
     $conn = CONN; // Assuming CONN is your database connection
-    // Process each given code
-    $explodedCodes = [];
+
     foreach ($completeCode as $givenCode) {
         if (is_string($givenCode)) {
-            $explodedCodes = array_merge($explodedCodes, explode("\n", $givenCode));
+            $explodedCodes = explode("\n", $givenCode);
+            // Process $explodedCodes as needed
+        } else {
+            // Handle non-string elements of $completeCode array, if any
         }
     }
 
-    // Remove empty and short codes and remove duplicates
+    $results_array = [
+        'not_exist' => [],
+        'existing' => [],
+    ];
+
+    $explodedCodes = array_map(function ($code) {
+        if (strlen($code) > 0) {
+            return  preg_replace('/[^a-z0-9]/i', '', $code);
+        }
+    }, $explodedCodes);
+
     $explodedCodes = array_filter($explodedCodes, function ($code) {
-        return strlen($code) > 6;
+        if (strlen($code) > 6) {
+            return  $code;
+        }
     });
+
+    // Remove duplicate codes from results array
     $explodedCodes = array_unique($explodedCodes);
 
-    // Query database for existing codes
-    $existingCode = [];
-    $notExist = [];
+    $existing_code = []; // this array will hold the id and partNumber of the existing codes in DB
     foreach ($explodedCodes as $code) {
         $sql = "SELECT id, partnumber FROM yadakshop1402.nisha WHERE partnumber LIKE '" . $code . "%'";
         $result = mysqli_query($conn, $sql);
 
+        $all_matched = [];
         if (mysqli_num_rows($result) > 0) {
             while ($item = mysqli_fetch_assoc($result)) {
-                $existingCode[$code][] = $item;
+                array_push($all_matched, $item);
             }
+
+            $existing_code[$code] = $all_matched;
         } else {
-            $notExist[] = $code;
+            array_push($results_array['not_exist'], $code); //Adding nonexisting codes to the final result array's not_exist index Line NO: 34
         }
     }
 
-    // Process existing codes
     $itemDetails = [];
-    $relationId = [];
+    $relation_id = [];
     $codeRelationId = [];
-    foreach ($existingCode as $code => $items) {
-        $itemDetails[$code] = [];
-        foreach ($items as $item) {
-            $relationExist = isInRelation($conn, $item['id']);
+    foreach ($explodedCodes as $code) {
+        if (!in_array($code, $results_array['not_exist'])) {
+            $itemDetails[$code] = [];
+            foreach ($existing_code[$code] as $item) {
 
-            if ($relationExist && !in_array($relationExist, $relationId)) {
-                $relationId[] = $relationExist;
-                $codeRelationId[$code] = $relationExist;
-                $itemDetails[$code][$item['partnumber']]['information'] = info($conn, $relationExist);
-                $itemDetails[$code][$item['partnumber']]['relation'] = relations($conn, $relationExist, true);
-                $itemDetails[$code][$item['partnumber']]['givenPrice'] = givenPrice($conn, array_keys($itemDetails[$code][$item['partnumber']]['relation']['goods']), $relationExist);
-            } else {
-                $relationId[] = 'not' . rand();
-                $codeRelationId[$code] = $relationId;
-                $itemDetails[$code][$item['partnumber']]['information'] = info($conn);
-                $itemDetails[$code][$item['partnumber']]['relation'] = relations($conn, $item['partnumber'], false);
-                $itemDetails[$code][$item['partnumber']]['givenPrice'] = givenPrice($conn, array_keys($itemDetails[$code][$item['partnumber']]['relation']['goods']));
+                // Check every matched good's Id If they have relationship and,
+                // avoid operation for items in the same relationship
+                $relation_exist = isInRelation($conn, $item['id']);
+
+                if ($relation_exist) {
+                    $codeRelationId[$code] =  $relation_exist;
+                    if (!in_array($relation_exist, $relation_id)) {
+
+                        array_push($relation_id, $relation_exist); // if a new relation exists -> put it in the result array
+
+                        $itemDetails[$code][$item['partnumber']]['information'] = info($conn, $relation_exist);
+                        $itemDetails[$code][$item['partnumber']]['relation'] = relations($conn, $relation_exist, true);
+                        $itemDetails[$code][$item['partnumber']]['givenPrice'] = givenPrice($conn, array_keys($itemDetails[$code][$item['partnumber']]['relation']['goods']), $relation_exist);
+                    }
+                } else {
+                    $codeRelationId[$code] =  'not' . rand();
+                    $itemDetails[$code][$item['partnumber']]['information'] = info($conn);
+                    $itemDetails[$code][$item['partnumber']]['relation'] = relations($conn, $item['partnumber'], false);
+                    $itemDetails[$code][$item['partnumber']]['givenPrice'] = givenPrice($conn, array_keys($itemDetails[$code][$item['partnumber']]['relation']['goods']));
+                }
             }
         }
     }
 
-    // Sort itemDetails by relation sum
-    uasort($itemDetails, function ($a, $b) {
-        $sumA = array_sum($a['relation']['sorted']);
-        $sumB = array_sum($b['relation']['sorted']);
-        return $sumA == $sumB ? 0 : ($sumA > $sumB ? -1 : 1);
-    });
+    // Custom comparison function to sort inner arrays by values in descending order
+    function customSort($a, $b)
+    {
+        $sumA = array_sum($a['relation']['sorted']); // Calculate the sum of values in $a
+        $sumB = array_sum($b['relation']['sorted']); // Calculate the sum of values in $b
 
-    return [
+        // Compare the sums in descending order
+        if ($sumA == $sumB) {
+            return 0;
+        }
+        return ($sumA > $sumB) ? -1 : 1;
+    }
+
+
+    foreach ($itemDetails as &$record) {
+
+        uasort($record, 'customSort'); // Sort the inner array by values
+    }
+
+    return ([
         'explodedCodes' => $explodedCodes,
-        'not_exist' => $notExist,
+        'not_exist' => $results_array['not_exist'],
         'existing' => $itemDetails,
         'completeCode' => $completeCode,
         'relation_id' => $codeRelationId
-    ];
+    ]);
 }
 
 /**
