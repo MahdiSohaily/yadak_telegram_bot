@@ -71,7 +71,6 @@ function getSelectedGoods()
     return $partNumbers;
 }
 
-
 function getInRelationItems($nisha_id)
 {
     // Fetch similar items based on the provided nisha_id
@@ -111,7 +110,6 @@ function findRelation($id)
         return false;
     }
 }
-
 
 function sendMessageWithTemplate($receiver, $template)
 {
