@@ -113,6 +113,41 @@ function findRelation($id)
 }
 
 
+function sendMessageWithTemplate($receiver, $template)
+{
+    // Prepare POST data
+    $postData = http_build_query([
+        'sendMessageWithTemplate' => 'sendMessageWithTemplate',
+        'receiver' => $receiver,
+        'message' => $template
+    ]);
+
+    // Initialize cURL session
+    $ch = curl_init();
+
+    // Set cURL options
+    curl_setopt($ch, CURLOPT_URL, "http://telegram.om-dienstleistungen.de/");
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    // Execute cURL session
+    $response = curl_exec($ch);
+
+    // Check for errors
+    if (curl_errno($ch)) {
+        // Handle cURL error
+        $error = curl_error($ch);
+        curl_close($ch);
+        return "Error: " . $error;
+    }
+
+    // Close cURL session
+    curl_close($ch);
+
+    // Return response
+    return $response;
+}
 
 
 

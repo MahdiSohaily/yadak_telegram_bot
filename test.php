@@ -31,8 +31,6 @@ curl_setopt_array($curl, [
 // Execute the request
 $response = curl_exec($curl);
 
-
-
 // Check for errors
 if (curl_errno($curl)) {
     $errorMessage = curl_error($curl);
@@ -54,7 +52,8 @@ if (curl_errno($curl)) {
     }
 }
 
-validateMessages($response);
+// Close curl
+curl_close($curl);
 
 function validateMessages($messages)
 {
@@ -91,7 +90,7 @@ function validateMessages($messages)
 
                     echo $template;
                     saveConversation($sender, implode(' ', $codes), $template);
-                    // sendMessageWithTemplate($sender, $template);
+                    sendMessageWithTemplate($sender, $template);
                 } catch (Exception $error) {
                     echo 'Error fetching price: ' . $error->getMessage();
                 }
@@ -136,7 +135,3 @@ function getFinalPrice($prices)
 
     return $displayPrices;
 }
-
-
-// Close curl
-curl_close($curl);
