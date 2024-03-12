@@ -90,6 +90,9 @@ function validateMessages($messages)
                     $template = '';
 
                     foreach ($data as $item) {
+                        if (trim($item['price']) == 'موجود نیست') {
+                            continue;
+                        }
                         $template .= $item['partnumber'] . ' : ' . $item['price'] . "\n";
                     }
 
