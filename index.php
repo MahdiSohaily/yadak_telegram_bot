@@ -146,7 +146,6 @@ require_once './app/Controllers/TelegramController.php';
 
     let NewContacts = [];
     let selectedPartNumber = null;
-    let AllMessages = null;
 
     function toggleModalDisplay() {
         modal_container.style.display = modal_container.style.display === 'none' ? 'flex' : 'none';
@@ -367,181 +366,6 @@ require_once './app/Controllers/TelegramController.php';
             });
     }
 
-    function getMessagesAuto() {
-        try {
-            var params = new URLSearchParams();
-            params.append('getMessagesAuto', 'getMessagesAuto');
-            axios
-                .post("http://telegram.om-dienstleistungen.de/", params)
-                .then(function(response) {
-                    const messages = JSON.stringify(response.data);
-
-                    AllMessages = JSON.parse(messages);
-                    checkMessages()
-                })
-                .catch(function(error) {
-                    console.log(error);
-                });
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-    AllMessages = {
-        "169785118": {
-            "userName": ["169785118"],
-            "info": [{
-                "code": "58101A7A00\n",
-                "message": "58101A7A00"
-            }],
-            "name": ["Mahdi Rezaei"]
-        }
-    }
-
-    async function checkMessages() {
-        for (messageInfo of Object.values(AllMessages)) {
-            const sender = messageInfo.userName[0];
-            let displayPrices = [];
-
-            if (existingContacts.includes(sender + '')) {
-                const messageContent = messageInfo.info;
-
-                for (let i = 0; i < messageContent.length; i++) {
-                    const item = messageContent[i];
-                    let codes = item.code.split('\n');
-                    codes = codes.filter(line => line != "");
-
-                    // Map each code to an async function call and wait for all promises to resolve
-                    const promises = codes.map(async (line) => {
-                        const isGood = await isGoodSelected(line);
-                        return isGood ? line : null; // Filter out codes that are not good
-                    });
-
-                    // Wait for all promises to resolve
-                    const filteredCodes = await Promise.all(promises);
-
-                    // Remove null or undefined elements from the array
-                    codes = filteredCodes.filter(code => code);
-
-                    if (codes.length) {
-                        try {
-                            const data = await getPrice(codes);
-                            let template = '';
-
-                            for (let j = 0; j < data.length; j++) {
-                                const item = data[j];
-                                template += `${item.partnumber} : ${item.price} \n`;
-                            }
-
-                            saveConversation(sender, codes.join(' '), template);
-                            await sendMessageWithTemplate(sender, template);
-                        } catch (error) {
-                            console.error('Error fetching price:', error);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    async function isGoodSelected(partnumber) {
-
-        var params = new URLSearchParams();
-        params.append('checkGood', 'checkGood');
-        params.append('partnumber', partnumber);
-
-        const result = await axios.post("./app/api/ValidationApi.php", params)
-            .then(function(response) {
-                const data = response.data;
-                return data;
-            })
-            .catch(function(error) {
-                console.log(error);
-            });
-        return result;
-    }
-
-
-
-    function saveConversation(receiver, request = '', response = '') {
-        var params = new URLSearchParams();
-        params.append('saveConversation', 'saveConversation');
-        params.append('receiver', receiver);
-        params.append('request', request);
-        params.append('response', response);
-
-        axios
-            .post("./app/api/ContactsApi.php", params)
-            .then(function(response) {
-
-            })
-            .catch(function(error) {
-                console.log(error);
-            });
-    }
-
-    async function getPrice(codes) {
-        var params = new URLSearchParams();
-        params.append('code', codes.join('\n'));
-        let result = await axios
-            .post("../callcenter/report/lastPrice.php", params)
-            .then(function(response) {
-                let displayPrices = [];
-                const data = response.data.data;
-                const explodedCodes = data.explodedCodes;
-                const existing = data.existing;
-                for (const code of explodedCodes) {
-                    const existingCodes = Object.values(existing[code]);
-                    let max = 0;
-
-                    for (const item of existingCodes) {
-                        max += Math.max(...Object.values(item['relation']['sorted']))
-                    }
-
-                    if (max > 0) {
-                        let givenPrice = existingCodes[0]['givenPrice'];
-                        if (!Array.isArray(givenPrice)) {
-                            givenPrice = [...Object.values(givenPrice)]
-                        }
-
-                        if (givenPrice.length > 0) {
-                            displayPrices.push({
-                                partnumber: givenPrice[0]['partnumber'],
-                                price: givenPrice[0]['price']
-                            });
-                        } else {
-                            displayPrices.push({
-                                partnumber: givenPrice[0]['partnumber'],
-                                price: 'موجود نیست'
-                            });
-                        }
-                    }
-                }
-                return displayPrices;
-
-            })
-            .catch(function(error) {
-                console.log(error);
-            });
-        return result;
-    }
-
-    function sendMessageWithTemplate(receiver, template) {
-        var params = new URLSearchParams();
-        params.append('sendMessageWithTemplate', 'sendMessageWithTemplate');
-        params.append('receiver', receiver);
-        params.append('message', template);
-
-        axios
-            .post("http://telegram.om-dienstleistungen.de/", params)
-            .then(function(response) {
-
-            })
-            .catch(function(error) {
-                console.log(error);
-            });
-    }
-
     function getPartialContacts(page = 1) {
         const existingContacts = document.getElementById('existingContacts');
         var params = new URLSearchParams();
@@ -624,6 +448,5 @@ require_once './app/Controllers/TelegramController.php';
 
     getPartialContacts();
     getPartialsSelectedGoods();
-    // setInterval(getMessagesAuto, 150000);
 </script>
 <?php require_once './layouts/footer.php';
