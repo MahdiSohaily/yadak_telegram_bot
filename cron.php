@@ -6,8 +6,8 @@ require_once './app/Controllers/MessageController.php';
 
 function boot()
 {
-    $now = date('Y-m-d H:i:s');
-    echo "\n\n Cron job started ( $now ) \n\n";
+    $now = date('H:i:s');
+    echo "\n\n**************************** Cron job started ( $now ) *****************************************\n\n";
     // API endpoint URL
     $apiUrl = 'http://telegram.om-dienstleistungen.de/';
 
@@ -89,11 +89,13 @@ function validateMessages($messages)
 
                     $template = '';
 
-                    foreach ($data as $item) {
-                        if (trim($item['price']) == 'موجود نیست') {
-                            continue;
+                    if ($data) {
+                        foreach ($data as $item) {
+                            if (trim($item['price']) == 'موجود نیست') {
+                                continue;
+                            }
+                            $template .= $item['partnumber'] . ' : ' . $item['price'] . "\n";
                         }
-                        $template .= $item['partnumber'] . ' : ' . $item['price'] . "\n";
                     }
 
                     echo "\n" . $template . "\n";
