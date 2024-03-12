@@ -24,7 +24,7 @@ function boot()
         CURLOPT_RETURNTRANSFER => true, // Return response as a string instead of outputting it
         CURLOPT_FOLLOWLOCATION => true, // Follow redirects
         CURLOPT_MAXREDIRS => 10, // Maximum number of redirects to follow
-        CURLOPT_TIMEOUT => 300, // Timeout in seconds
+        CURLOPT_TIMEOUT => 600, // Timeout in seconds
         CURLOPT_POST => true, // Set as POST request
         CURLOPT_POSTFIELDS => http_build_query($postData), // Encode data as URL-encoded format
         CURLOPT_HTTPHEADER => [ // Optional headers
@@ -93,7 +93,7 @@ function validateMessages($messages)
                         $template .= $item['partnumber'] . ' : ' . $item['price'] . "\n";
                     }
 
-                    echo "\n".$template . "\n";
+                    echo "\n" . $template . "\n";
                     saveConversation($sender, implode(' ', $codes), $template);
                     if ($template !== '')
                         sendMessageWithTemplate($sender, $template);
