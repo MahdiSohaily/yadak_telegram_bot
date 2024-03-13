@@ -472,6 +472,41 @@ require_once './app/Controllers/TelegramController.php';
             });
     }
 
+
+    function searchContact(pattern) {
+        const existingContacts = document.getElementById('existingContacts');
+        var params = new URLSearchParams();
+        params.append('searchContact', 'searchContact');
+        params.append('pattern', pattern);
+
+        axios
+            .post("./app/api/ContactsApi.php", params)
+            .then(function(response) {
+                const contacts = response.data;
+                if (contacts.length > 0) {
+                    let template = ``;
+                    let counter = 1;
+                    for (contact of contacts) {
+                        template += `
+                        <tr class="even:bg-gray-200 odd:bg-white">
+                            <td class="py-2 px-3 text-sm">${counter}</td>
+                            <td class="py-2 px-3 text-sm">${contact.name}</td>
+                            <td class="py-2 px-3 text-sm">${contact.username}</td>
+                            <td class="py-2 px-3 text-sm cursor-pointer" 
+                                onclick="deleteContact('${contact.id}')">
+                                <img src="./public/img/del.svg" alt="plus icon">
+                            </td>
+                        </tr>`;
+                        counter++;
+                    }
+                    existingContacts.innerHTML = template;
+                }
+            })
+            .catch(function(error) {
+                console.log(error);
+            });
+    }
+
     getPartialContacts();
     getPartialsSelectedGoods();
 </script>
