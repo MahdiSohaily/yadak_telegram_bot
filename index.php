@@ -28,6 +28,7 @@ require_once './app/Controllers/TelegramController.php';
     <section class="p-5 border col-span-3 border-dotted border-2 rounded-md">
         <div class="flex justify-between">
             <h2 class="text-xl font-bold ">مخاطبین</h2>
+            <input type="text" placeholder="">
             <div class="flex gap-3">
                 <a title="مشاهده پیام های ارسالی" href="./messages.php">
                     <img src="./public/img/message.svg" alt="message icon">
