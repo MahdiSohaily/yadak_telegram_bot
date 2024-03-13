@@ -42,22 +42,31 @@ if (isset($_POST['addPartNumber'])) {
     echo json_encode(addGoodsForSell($selectedPartNumber));
 }
 
+function checkIfAlreadyExist($partNumber)
+{
+    // Prepare the SQL statement
+    $sql = "SELECT * FROM telegram.goods_for_sell WHERE partNumber = ?";
+
+    // Prepare the statement
+    $statement = CONN->prepare($sql);
+
+    // Bind parameters and execute the statement
+    $statement->bind_param("s", $partNumber);
+    $statement->execute();
+
+    // Store result
+    $result = $statement->get_result();
+
+    // Check if any rows were returned
+    return $result->num_rows > 0;
+}
 
 function addGoodsForSell($good)
 {
-    $count = 0;
-    // Check if good_id already exists
-    $check_sql = "SELECT COUNT(*) FROM goods_for_sell WHERE good_id = ?";
-    $check_stmt = CONN->prepare($check_sql);
-    $check_stmt->bind_param('i', $good->id);
-    $check_stmt->execute();
-    $check_stmt->bind_result($count);
-    $check_stmt->fetch();
-    $check_stmt->close();
-
-    if ($count > 0) {
+    if (checkIfAlreadyExist($good->partNumber)) {
         return "exists";
     }
+
     $nishaId = findRelation($good->id);
 
     if (!$nishaId) {
@@ -76,7 +85,9 @@ function addGoodsForSell($good)
         $relatedItems = getInRelationItems($nishaId);
         if ($relatedItems) {
             foreach ($relatedItems as $item) {
-                var_dump($item);
+                if (checkIfAlreadyExist($item['partnumber'])) {
+                    continue; //
+                }
                 $sql = "INSERT INTO goods_for_sell (good_id, partNumber) VALUES (?, ?)";
                 $stmt = CONN->prepare($sql);
                 $stmt->bind_param('ss', $item['id'], $item['partnumber']);
