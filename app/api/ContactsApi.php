@@ -177,3 +177,36 @@ function searchContact($pattern)
     }
     return json_encode($contacts);
 }
+
+if (isset($_POST['toggleStatus'])) {
+    $status = $_POST['status'];
+
+    header('Content-Type: application/json');
+    echo toggleStatus();
+}
+
+function toggleStatus()
+{
+    $sql = "SELECT * FROM telegram.status";
+    $result = CONN->query($sql);
+    $status = $result->fetch_assoc();
+    $status = $status['status'];
+
+    if ($status == 1) {
+        $sql = "UPDATE telegram.status SET status = 0";
+        $result = CONN->query($sql);
+        if ($result) {
+            return 0;
+        } else {
+            return 1;
+        }
+    } else {
+        $sql = "UPDATE telegram.status SET status = 1";
+        $result = CONN->query($sql);
+        if ($result) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+}

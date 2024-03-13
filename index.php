@@ -31,9 +31,9 @@ require_once './app/Controllers/TelegramController.php';
             <input onkeyup="searchContact(this.value)" class="px-3 py-2 border w-1/2" type="text" placeholder="جستجوی مخاطبین ....">
             <div class="flex items-center gap-3">
                 <?php if ($status) : ?>
-                    <img title="توقف ارسال پیام خودکار" class="cursor-pointer" src="./public/img/powerOff.svg" alt="power off icon">
+                    <img onclick="toggleStatus(0)" title="توقف ارسال پیام خودکار" class="cursor-pointer" src="./public/img/powerOff.svg" alt="power off icon">
                 <?php else : ?>
-                    <img title="شروع ارسال پیام خودکار" class="cursor-pointer" src="./public/img/powerOn.svg" alt="power On icon">
+                    <img onclick="toggleStatus(1)" title="شروع ارسال پیام خودکار" class="cursor-pointer" src="./public/img/powerOn.svg" alt="power On icon">
                 <?php endif; ?>
                 <a title="مشاهده پیام های ارسالی" href="./messages.php">
                     <img src="./public/img/message.svg" alt="message icon">
@@ -515,6 +515,24 @@ require_once './app/Controllers/TelegramController.php';
         if (pattern.length == 0) {
             getPartialContacts();
         }
+    }
+
+    function toggleStatus(status) {
+        var params = new URLSearchParams();
+        params.append('toggleStatus', 'toggleStatus');
+        params.append('status', status);
+
+        axios
+            .post("./app/api/ContactsApi.php", params)
+            .then(function(response) {
+                const data = response.data;
+                if (data == true) {
+                    window.location.reload();
+                }
+            })
+            .catch(function(error) {
+                console.log(error);
+            });
     }
 
     getPartialContacts();
