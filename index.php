@@ -119,7 +119,7 @@ require_once './app/Controllers/TelegramController.php';
                         <th class="text-right py-2 px-3 text-sm">اسم</th>
                         <th class="text-right py-2 px-3 text-sm">نام کاربری</th>
                         <th class="text-right py-2 px-3 text-sm">
-                            <button onclick="addAllContacts()" class="bg-blue-500 text-sm text-white py-2 px-5 rounded-sm">افزودن همه</button>
+                          <img src="./public/img/addAll.svg" alt="add to database icon" onclick="addAllContacts()">
                         </th>
                     </tr>
                 </thead>
