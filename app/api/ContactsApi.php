@@ -157,3 +157,23 @@ function saveConversation($receiver, $request, $response)
     }
 }
 
+
+if (isset($_POST['searchContact'])) {
+    $pattern = $_POST['pattern'];
+
+    header('Content-Type: application/json');
+    echo searchContact($pattern);
+}
+
+function searchContact($pattern)
+{
+    $sql = "SELECT * FROM telegram.receiver WHERE name LIKE '%$pattern%' OR username LIKE '%$pattern%'";
+    $result = CONN->query($sql);
+    $contacts = [];
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $contacts[] = $row;
+        }
+    }
+    return json_encode($contacts);
+}
