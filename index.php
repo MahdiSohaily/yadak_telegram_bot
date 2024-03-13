@@ -28,9 +28,11 @@ require_once './app/Controllers/TelegramController.php';
     <section class="p-5 border col-span-3 border-dotted border-2 rounded-md">
         <div class="flex justify-between">
             <h2 class="text-xl font-bold ">مخاطبین</h2>
-            <div>
-                <a href="./messages.php" class="bg-blue-500 text-sm text-white py-2 px-5 rounded-sm">پیام ها </a>
-                <button onclick="toggleModalDisplay2()" class="bg-blue-500 text-sm text-white py-2 px-5 rounded-sm">بارگیری</button>
+            <div class="flex gap-3">
+                <a title="مشاهده پیام های ارسالی" href="./messages.php">
+                    <img src="./public/img/message.svg" alt="message icon">
+                </a>
+                <img title="بارگیری مخاطبین جدید" class="cursor-pointer" onclick="toggleModalDisplay2()" src="./public/img/reload.svg" alt="reload icon">
             </div>
         </div>
         <table class="w-full mt-3">
