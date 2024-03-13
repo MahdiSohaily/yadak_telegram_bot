@@ -102,7 +102,7 @@ require_once './app/Controllers/TelegramController.php';
                             $pages = ceil(count($selectedGoods) / 50);
                             if ($pages > 1)
                                 for ($page = 1; $page <= $pages; $page++) {
-                                    echo "<span class='flex justify-center items-center w-8 p-2 m-1 text-sm cursor-pointer bg-gray-900 text-white' onclick='getPartialContacts($page)'>$page</span>";
+                                    echo "<span class='flex justify-center items-center w-8 p-2 m-1 text-sm cursor-pointer bg-gray-900 text-white' onclick='getPartialsSelectedGoods($page)'>$page</span>";
                                 }
                             ?>
                         </div>
