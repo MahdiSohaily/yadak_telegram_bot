@@ -4,6 +4,7 @@ require_once './database/connect.php';
 require_once './utilities/PriceHelpers.php';
 require_once './app/Controllers/MessageController.php';
 
+$status = getStatus();
 function boot()
 {
     $now = date('H:i:s');
@@ -152,4 +153,9 @@ function getFinalPrice($prices)
     return $displayPrices;
 }
 
-boot();
+if ($status) {
+
+    boot();
+} else {
+    echo 'ارسال پیام خودکار غیرفعال است';
+}

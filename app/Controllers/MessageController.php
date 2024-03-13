@@ -8,6 +8,15 @@ function getMessages()
     return $allMessages;
 }
 
+function getStatus()
+{
+    $sql = "SELECT * FROM telegram.receiver_cat WHERE id = 1";
+    $result = CONN->query($sql);
+    $status = $result->fetch_assoc();
+    $status = $status['status'];
+    return $status;
+}
+
 function checkIfValidSender($sender)
 {
     $sql = "SELECT * FROM telegram.receiver WHERE chat_id = ?";
@@ -311,8 +320,6 @@ function setup_loading($completeCode)
         'relation_id' => $codeRelationId
     ]);
 }
-
-
 
 /**
  * @param Connection to the database
