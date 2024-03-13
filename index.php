@@ -13,13 +13,24 @@ require_once './app/Controllers/TelegramController.php';
         justify-content: center;
         align-items: center;
     }
+
+    .modal_container2 {
+        position: fixed;
+        inset: 0;
+        background-color: rgba(0, 0, 0, 0.7);
+        z-index: 100000000000000000;
+        flex-direction: column;
+        align-items: center;
+        padding-block: 10px;
+    }
 </style>
 <div class="rtl flex px-5 gap-5 h-screen grid grid-cols-1 gap-6 lg:grid-cols-5">
-    <section class="p-5 border col-span-2 border-dotted border-2 rounded-md">
+    <section class="p-5 border col-span-3 border-dotted border-2 rounded-md">
         <div class="flex justify-between">
             <h2 class="text-xl font-bold ">مخاطبین</h2>
             <div>
-                <a href="./messages.php" class="bg-blue-500 text-sm text-white py-2 px-5 rounded-sm">پیام های ارسالی</a>
+                <a href="./messages.php" class="bg-blue-500 text-sm text-white py-2 px-5 rounded-sm">پیام ها </a>
+                <button onclick="toggleModalDisplay2()" class="bg-blue-500 text-sm text-white py-2 px-5 rounded-sm">بارگیری</button>
             </div>
         </div>
         <table class="w-full mt-3">
@@ -54,29 +65,6 @@ require_once './app/Controllers/TelegramController.php';
         </table>
     </section>
     <section class="p-5 border col-span-2 border-dotted border-2 rounded-md">
-        <div class="flex justify-between">
-            <h2 class="text-xl font-bold ">مخاطبین جدید</h2>
-            <div>
-                <button onclick="connect()" class="bg-blue-500 text-sm text-white py-2 px-5 rounded-sm">بارگیری</button>
-                <button onclick="addAllContacts()" class="bg-blue-500 text-sm text-white py-2 px-5 rounded-sm">افزودن همه</button>
-            </div>
-        </div>
-        <table class="w-full mt-3">
-            <thead>
-                <tr class="bg-gray-900">
-                    <th class="text-right py-2 px-3 text-sm">#</th>
-                    <th class="text-right py-2 px-3 text-sm">اسم</th>
-                    <th class="text-right py-2 px-3 text-sm">نام کاربری</th>
-                    <th class="text-right py-2 px-3 text-sm">
-                        <img src="./public/img/setting.svg" />
-                    </th>
-                </tr>
-            </thead>
-            <tbody id="newContacts">
-            </tbody>
-        </table>
-    </section>
-    <section class="p-5 border border-dotted border-2 rounded-md">
         <div class="flex justify-between">
             <h2 class="text-xl font-bold "> کد های انتخابی</h2>
             <button onclick="toggleModalDisplay()" class="bg-blue-500 text-sm text-white py-2 px-5 rounded-sm">افزودن کد</button>
@@ -115,6 +103,30 @@ require_once './app/Controllers/TelegramController.php';
 </div>
 
 <!-- MODAL TO ADD NEW PART NUMBER  -->
+<div id="new_contact_container" class="modal_container2" style=" display: none;">
+    <div class="bg-white rounded-lg w-1/2 lg:w-1/3 p-5 rtl border-b overflow-auto">
+        <div class="flex justify-between">
+            <h2 class="font-bold text-xl">مخاطبین جدید</h2>
+            <img onclick="toggleModalDisplay2()" class="cursor-pointer" src="./public/img/close.svg" alt="close icon">
+        </div>
+        <div class="py-5">
+            <table class="w-full mt-3">
+                <thead>
+                    <tr class="bg-gray-900">
+                        <th class="text-right py-2 px-3 text-sm">#</th>
+                        <th class="text-right py-2 px-3 text-sm">اسم</th>
+                        <th class="text-right py-2 px-3 text-sm">نام کاربری</th>
+                        <th class="text-right py-2 px-3 text-sm">
+                            <button onclick="addAllContacts()" class="bg-blue-500 text-sm text-white py-2 px-5 rounded-sm">افزودن همه</button>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="newContacts">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 <div id="modal_container" class="modal_container" style=" display: none;">
     <div class="bg-white rounded-lg w-1/2 lg:w-1/3 p-5 rtl border-b">
         <div class="flex justify-between">
@@ -139,6 +151,7 @@ require_once './app/Controllers/TelegramController.php';
     const existingContacts = <?= json_encode(array_column($contacts, 'chat_id')); ?>;
     const definedCodes = <?= json_encode(array_column($selectedGoods, 'partNumber')); ?>;
 
+    const new_contact_container = document.getElementById('new_contact_container');
     const modal_container = document.getElementById('modal_container');
     const partNumber = document.getElementById('partNumber');
     const search_container = document.getElementById('search_container');
@@ -149,6 +162,16 @@ require_once './app/Controllers/TelegramController.php';
 
     function toggleModalDisplay() {
         modal_container.style.display = modal_container.style.display === 'none' ? 'flex' : 'none';
+    }
+
+    function toggleModalDisplay2() {
+        if (new_contact_container.style.display === 'none') {
+            connect();
+            new_contact_container.style.display = 'flex';
+        } else {
+            new_contact_container.style.display = 'none';
+        }
+
     }
 
     function addPartNumber() {
