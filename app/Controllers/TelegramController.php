@@ -2,6 +2,7 @@
 $contacts = getContacts();
 $selectedGoods = getSelectedGoods();
 $newContacts = null;
+$status = false;
 
 
 
