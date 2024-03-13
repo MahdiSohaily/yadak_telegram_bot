@@ -2,7 +2,7 @@
 $contacts = getContacts();
 $selectedGoods = getSelectedGoods();
 $newContacts = null;
-$status = false;
+$status = getStatus();
 
 
 
@@ -22,3 +22,11 @@ function getContacts()
     return $contacts;
 }
 
+function getStatus()
+{
+    $sql = "SELECT * FROM telegram.receiver_cat WHERE id = 1";
+    $result = CONN->query($sql);
+    $status = $result->fetch_assoc();
+    $status = $status['status'];
+    return $status;
+}

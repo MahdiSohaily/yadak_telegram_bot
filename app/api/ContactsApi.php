@@ -187,13 +187,13 @@ if (isset($_POST['toggleStatus'])) {
 
 function toggleStatus()
 {
-    $sql = "SELECT * FROM telegram.status";
+    $sql = "SELECT * FROM telegram.receiver_cat WHERE id = 1";
     $result = CONN->query($sql);
     $status = $result->fetch_assoc();
     $status = $status['status'];
 
     if ($status == 1) {
-        $sql = "UPDATE telegram.status SET status = 0";
+        $sql = "UPDATE telegram.receiver_cat SET status = 0 WHERE id = 1";
         $result = CONN->query($sql);
         if ($result) {
             return 0;
@@ -201,7 +201,7 @@ function toggleStatus()
             return 1;
         }
     } else {
-        $sql = "UPDATE telegram.status SET status = 1";
+        $sql = "UPDATE telegram.receiver_cat SET status = 1 WHERE id = 1";
         $result = CONN->query($sql);
         if ($result) {
             return 1;

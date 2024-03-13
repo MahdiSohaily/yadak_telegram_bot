@@ -526,9 +526,7 @@ require_once './app/Controllers/TelegramController.php';
             .post("./app/api/ContactsApi.php", params)
             .then(function(response) {
                 const data = response.data;
-                if (data == true) {
-                    window.location.reload();
-                }
+                window.location.reload();
             })
             .catch(function(error) {
                 console.log(error);
