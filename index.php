@@ -28,8 +28,8 @@ require_once './app/Controllers/TelegramController.php';
     <section class="p-5 border col-span-3 border-dotted border-2 rounded-md">
         <div class="flex justify-between">
             <h2 class="text-xl font-bold ">مخاطبین</h2>
-            <input type="text" placeholder="">
-            <div class="flex gap-3">
+            <input onkeyup="searchContact(this.value)" class="px-3 py-2 border w-1/2" type="text" placeholder="جستجوی مخاطبین ....">
+            <div class="flex items-center gap-3">
                 <a title="مشاهده پیام های ارسالی" href="./messages.php">
                     <img src="./public/img/message.svg" alt="message icon">
                 </a>
@@ -120,7 +120,7 @@ require_once './app/Controllers/TelegramController.php';
                         <th class="text-right py-2 px-3 text-sm">اسم</th>
                         <th class="text-right py-2 px-3 text-sm">نام کاربری</th>
                         <th class="text-right py-2 px-3 text-sm">
-                          <img src="./public/img/addAll.svg" alt="add to database icon" onclick="addAllContacts()">
+                            <img src="./public/img/addAll.svg" alt="add to database icon" onclick="addAllContacts()">
                         </th>
                     </tr>
                 </thead>
