@@ -196,7 +196,6 @@ require_once './app/Controllers/TelegramController.php';
         axios.post("./app/api/partNumberApi.php", params)
             .then(function(response) {
                 const data = response.data;
-                console.log(data);
                 if (data == 'true') {
                     message.innerHTML = "عملیلت موفقانه صورت گرفت";
 

@@ -82,6 +82,7 @@ function addGoodsForSell($good)
                 $stmt->bind_param('ss', $item['id'], $item['partnumber']);
                 $stmt->execute();
             }
+            return 'true'; // Insertion successful
         }
     }
 }
