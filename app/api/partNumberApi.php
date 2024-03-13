@@ -58,18 +58,72 @@ function addGoodsForSell($good)
     if ($count > 0) {
         return "exists";
     }
+    $nishaId = findRelation($good->id);
 
-    // If good_id does not exist, proceed with insertion
-    $sql = "INSERT INTO goods_for_sell (good_id, partNumber) VALUES (?, ?)";
-    $stmt = CONN->prepare($sql);
-    $stmt->bind_param('is', $good->id, $good->partNumber);
+    if (!$nishaId) {
+        // If good_id does not exist, proceed with insertion
+        $sql = "INSERT INTO goods_for_sell (good_id, partNumber) VALUES (?, ?)";
+        $stmt = CONN->prepare($sql);
+        $stmt->bind_param('is', $good->id, $good->partNumber);
 
-    // Execute the prepared statement
-    if ($stmt->execute()) {
-        return 'true'; // Insertion successful
+        // Execute the prepared statement
+        if ($stmt->execute()) {
+            return 'true'; // Insertion successful
+        } else {
+            return 'false'; // Insertion failed
+        }
     } else {
-        return 'false'; // Insertion failed
+        $relatedItems = getInRelationItems($nishaId);
+        if ($relatedItems) {
+            foreach ($relatedItems as $item) {
+                var_dump($item);
+                $sql = "INSERT INTO goods_for_sell (good_id, partNumber) VALUES (?, ?)";
+                $stmt = CONN->prepare($sql);
+                $stmt->bind_param('ss', $item['id'], $item['partnumber']);
+                $stmt->execute();
+            }
+        }
     }
+}
+
+function findRelation($id)
+{
+    // Prepare and execute the SQL query
+    $sql = "SELECT pattern_id FROM shop.similars WHERE nisha_id = '$id' LIMIT 1";
+    $result = CONN->query($sql);
+
+    // Check if there are any rows returned
+    if ($result && $result->num_rows > 0) {
+        // Fetch the first row and return the pattern_id
+        $row = $result->fetch_assoc();
+        return (int) $row['pattern_id']; // Convert to integer and return
+    } else {
+        // No rows found, return false
+        return false;
+    }
+}
+
+function getInRelationItems($nisha_id)
+{
+    // Fetch similar items based on the provided nisha_id
+    $sql = "SELECT nisha_id FROM shop.similars WHERE pattern_id = '$nisha_id'";
+    $result = CONN->query($sql);
+    $goods = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    $all_ids = array_column($goods, 'nisha_id');
+
+    if (count($all_ids) == 0) {
+        return false;
+    }
+
+    // Prepare the list of IDs to use in the IN clause of the next query
+    $idList = implode(',', $all_ids);
+
+    // Fetch part numbers of the related items
+    $partNumberSQL = "SELECT id, partnumber FROM yadakshop1402.nisha WHERE id IN ($idList)";
+    $partNumberResult = CONN->query($partNumberSQL);
+    $partNumbers = mysqli_fetch_all($partNumberResult, MYSQLI_ASSOC);
+
+    return ($partNumbers);
 }
 
 if (isset($_POST['deleteGood'])) {
