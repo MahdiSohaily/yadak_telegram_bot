@@ -87,21 +87,24 @@ function validateMessages($messages)
             if (count($codes) > 0) {
                 try {
                     $data = getPrice($codes);
+                    print_r(json_encode($data) . "\n");
                     $data = getFinalPrice($data);
 
                     $template = '';
 
-                    foreach ($data as $item) {
-                        if (trim($item['price']) == 'موجود نیست') {
-                            continue;
+                    if ($data) {
+                        foreach ($data as $item) {
+                            if (trim($item['price']) == 'موجود نیست') {
+                                continue;
+                            }
+                            $template .= $item['partnumber'] . ' ' . $item['price'] . "\n";
                         }
-                        $template .= $item['partnumber'] . ' : ' . $item['price'] . "\n";
                     }
 
                     echo "\n" . $template . "\n";
                     saveConversation($sender, implode(' ', $codes), $template);
-                    if ($template !== '')
-                        sendMessageWithTemplate($sender, $template);
+                    // if ($template !== '')
+                    //     sendMessageWithTemplate($sender, $template);
                 } catch (Exception $error) {
                     echo 'Error fetching price: ' . $error->getMessage();
                 }
@@ -141,7 +144,7 @@ function getFinalPrice($prices)
 
         if (count($givenPrice) > 0) {
             $displayPrices[] = [
-                'partnumber' => $givenPrice[0]['partnumber'],
+                'partnumber' => $code,
                 'price' => $givenPrice[0]['price']
             ];
         } else {
@@ -157,7 +160,7 @@ function getFinalPrice($prices)
 $response = '{
     "1310670940":
         {"info":[
-            {"code":"86511D4240\n","message":"29110-2B800","date":1710235467}],
+            {"code":"581013SA26\n","message":"58101-3SA26","date":1710235467}],
         "name":["Azizi -Diakopar"],
         "userName":[1310670940],
         "profile":["1310670940_x_4.jpg"]},

@@ -94,7 +94,7 @@ function validateMessages($messages)
                             if (trim($item['price']) == 'موجود نیست') {
                                 continue;
                             }
-                            $template .= $item['partnumber'] . ' : ' . $item['price'] . "\n";
+                            $template .= $item['partnumber'] . ' ' . $item['price'] . "\n";
                         }
                     }
 
@@ -141,7 +141,7 @@ function getFinalPrice($prices)
 
         if (count($givenPrice) > 0) {
             $displayPrices[] = [
-                'partnumber' => $givenPrice[0]['partnumber'],
+                'partnumber' => $code,
                 'price' => $givenPrice[0]['price']
             ];
         } else {
