@@ -94,7 +94,7 @@ function validateMessages($messages)
                             if (trim($item['price']) == 'موجود نیست') {
                                 continue;
                             }
-                            $template .= $item['partnumber'] . ' ' . $item['price'] . "\n";
+                            $template .= $item['partnumber'] . '    ' . $item['price'] . "\n";
                         }
                     }
 
