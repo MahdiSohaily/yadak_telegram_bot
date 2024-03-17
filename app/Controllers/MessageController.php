@@ -196,7 +196,7 @@ function getPrice($codes)
 
                         if (checkDateIfOkay($GLOBALS['applyDate'], $priceDate)) {
                             $rawGivenPrice = $price['price'];
-                            $price['price'] = applyDollarRate($rawGivenPrice, $GLOBALS['applyDate']);
+                            $price['price'] = applyDollarRate($rawGivenPrice, $priceDate);
                         }
                     }
                     unset($price); // Unset the reference to avoid any unintended modifications outside the loop

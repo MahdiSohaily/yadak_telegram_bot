@@ -154,7 +154,6 @@ function getFinalPrice($prices)
 }
 
 if ($status) {
-
     boot();
 } else {
     echo 'ارسال پیام خودکار غیرفعال است';
